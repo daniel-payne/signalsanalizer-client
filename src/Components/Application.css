@@ -1,0 +1,10 @@
+.Application{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+ 
+.Application .map-display{
+  flex-grow: 1;
+  background-color: gainsboro;
+}
