@@ -23,14 +23,14 @@ class Footer extends Component {
 
     return (
       <BottomNavigation
-        ClassName="Footer"
+        className="Footer"
         value={value}
         onChange={this.handleChange}
         showLabels
       >
-        <BottomNavigationAction label="Terrorism" icon={<TerrorismIcon />} />
-        <BottomNavigationAction label="Murder" icon={<MurderIcon />} />
-        <BottomNavigationAction label="Peace Index" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="a" icon={<TerrorismIcon />} />
+        <BottomNavigationAction label="b" icon={<MurderIcon />} />
+        <BottomNavigationAction label="c Index" icon={<LocationOnIcon />} />
       </BottomNavigation>
     )
   }

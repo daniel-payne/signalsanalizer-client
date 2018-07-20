@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Dimensions from 'react-dimensions'
 
 import Header from './header/Header'
 import Footer from './footer/Footer'
@@ -7,23 +8,47 @@ import Map from './map/Map'
 import './Application.css'
 
 import Drawer from '@material-ui/core/Drawer'
-import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
+// import Button from '@material-ui/core/Button'
+// import List from '@material-ui/core/List'
+// import Divider from '@material-ui/core/Divider'
 
-const styles = {
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
-}
+// const styles = {
+//   list: {
+//     width: 250,
+//   },
+//   fullList: {
+//     width: 'auto',
+//   },
+// }
 
 class Application extends Component {
   state = {
     left: false,
     right: false,
+    contenents: [],
+  }
+
+  componentDidMount() {
+    fetch('continents.json')
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        const contenents = json.map((continent) => {
+          if (continent.continentName !== 'Antarctica') {
+            return null
+          }
+          const geoJson = JSON.parse(continent.continentSimpleGeoJSON)
+
+          geoJson.properties = {
+            continentName: continent.continentName,
+          }
+
+          return geoJson
+        })
+
+        this.setState({ contenents })
+      })
   }
 
   toggleDrawer = (side, open) => () => {
@@ -41,7 +66,15 @@ class Application extends Component {
         />
 
         <div className="map-display">
-          <Map />
+          <Map
+            isMarkerShown={this.state.left}
+            contenents={this.state.contenents}
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={
+              <div style={{ height: this.props.containerHeight - 120 }} />
+            }
+            mapElement={<div style={{ height: `100%` }} />}
+          />
         </div>
 
         <Footer />
@@ -82,4 +115,4 @@ class Application extends Component {
   }
 }
 
-export default Application
+export default Dimensions()(Application)

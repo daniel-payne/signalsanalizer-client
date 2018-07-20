@@ -5,5 +5,8 @@
 
     "prettier/prettier": "error"
   },
-  "plugins": ["prettier"]
+  "plugins": ["prettier"],
+  "globals": {
+    "google": true
+  }
 }
