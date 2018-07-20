@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import Dimensions from 'react-dimensions'
 
-import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps'
+import { withGoogleMap, GoogleMap, Marker, Polygon } from 'react-google-maps'
 
 import './Map.css'
 
@@ -36,6 +36,22 @@ class Map extends Component {
         {this.props.isMarkerShown && (
           <Marker position={{ lat: -34.397, lng: 150.644 }} />
         )}
+        {this.props.contenents.map((contenent) => {
+          const paths = contenent.coordinates.map((items) => {
+            return items[0].map((item) => {
+              return { lat: item[1], lng: item[0] }
+            })
+          })
+
+          return (
+            <Polygon
+              paths={paths}
+              onClick={() => {
+                alert(JSON.stringify(contenent.properties))
+              }}
+            />
+          )
+        })}
       </GoogleMap>
     )
   }

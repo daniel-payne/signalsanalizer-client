@@ -34,18 +34,19 @@ class Application extends Component {
         return response.json()
       })
       .then((json) => {
-        const contenents = json.map((continent) => {
-          if (continent.continentName !== 'Antarctica') {
-            return null
-          }
-          const geoJson = JSON.parse(continent.continentSimpleGeoJSON)
+        const contenents = json
+          .map((continent) => {
+            const geoJson = JSON.parse(continent.continentSimpleGeoJSON)
 
-          geoJson.properties = {
-            continentName: continent.continentName,
-          }
+            geoJson.properties = {
+              continentName: continent.continentName,
+            }
 
-          return geoJson
-        })
+            return geoJson
+          })
+          .filter(
+            (continent) => continent.properties.continentName !== 'Antarctica'
+          )
 
         this.setState({ contenents })
       })
