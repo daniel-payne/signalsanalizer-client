@@ -25,7 +25,7 @@ const buildMap = (targetSVG, props, state) => {
     zoomGrouping.attr('transform', d3.event.transform)
   }
 
-  const projection = d3.geoOrthographic().center([0, 65]) // geoOrthographic geoMercator
+  const projection = d3.geoMercator().center([0, 65]) // geoOrthographic geoMercator geoEquirectangular geoGnomonic
   //.scale(100) // scale to fit group width
   //.translate([width / 2, height / 2]) // ensure centred in group
 
