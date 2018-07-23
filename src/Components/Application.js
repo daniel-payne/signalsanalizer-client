@@ -38,11 +38,17 @@ class Application extends Component {
           .map((continent) => {
             const geoJson = JSON.parse(continent.continentSimpleGeoJSON)
 
-            geoJson.properties = {
-              continentName: continent.continentName,
-            }
+            geoJson.coordinates.forEach((data) => {
+              data[0].reverse()
+            })
 
-            return geoJson
+            return {
+              type: 'Feature',
+              geometry: geoJson,
+              properties: {
+                continentName: continent.continentName,
+              },
+            }
           })
           .filter(
             (continent) => continent.properties.continentName !== 'Antarctica'
@@ -68,13 +74,10 @@ class Application extends Component {
 
         <div className="map-display">
           <Map
-            isMarkerShown={this.state.left}
+            isOpen={this.state.left}
             contenents={this.state.contenents}
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={
-              <div style={{ height: this.props.containerHeight - 120 }} />
-            }
-            mapElement={<div style={{ height: `100%` }} />}
+            displayWidth={this.props.containerWidth}
+            displayHeight={this.props.containerHeight}
           />
         </div>
 
