@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Dimensions from 'react-dimensions'
+import { observer, inject } from 'mobx-react'
 
 import Header from './header/Header'
 import Footer from './footer/Footer'
@@ -72,14 +73,12 @@ class Application extends Component {
           onOpenRightDrawer={this.toggleDrawer('right', true)}
         />
 
-        <div className="map-display">
-          <Map
-            isOpen={this.state.left}
-            contenents={this.state.contenents}
-            displayWidth={this.props.containerWidth}
-            displayHeight={this.props.containerHeight}
-          />
-        </div>
+        <Map
+          className="map-display"
+          countries={this.state.contenents}
+          displayWidth={this.props.containerWidth}
+          displayHeight={this.props.containerHeight}
+        />
 
         <Footer />
 
@@ -111,7 +110,7 @@ class Application extends Component {
               width: '600px',
             }}
           >
-            Right Drawer
+            Right Drawer {this.props.store.countries.length}
           </div>
         </Drawer>
       </div>
@@ -119,4 +118,7 @@ class Application extends Component {
   }
 }
 
-export default Dimensions()(Application)
+const Injectedpplication = inject('store')(observer(Application))
+const DimensionsApplication = Dimensions()(Injectedpplication)
+
+export default DimensionsApplication

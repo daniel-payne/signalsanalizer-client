@@ -1,5 +1,7 @@
-.country {
-  fill: #d0d0d0; /* country colour */
-  stroke: #2a2c39; /* country border colour */
-  stroke-width: 1; /* country border width */
+.Map {
+  background-color: gainsboro;
+}
+
+.Map .country {
+  fill: white;
 }
