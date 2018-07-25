@@ -44,16 +44,18 @@ class Application extends Component {
             })
 
             return {
-              type: 'Feature',
-              geometry: geoJson,
-              properties: {
-                continentName: continent.continentName,
-              },
+              continentName: continent.continentName,
+
+              geoJSON: JSON.stringify({
+                type: 'Feature',
+                geometry: {
+                  type: geoJson.type,
+                  coordinates: geoJson.coordinates,
+                },
+              }),
             }
           })
-          .filter(
-            (continent) => continent.properties.continentName !== 'Antarctica'
-          )
+          .filter((continent) => continent.continentName !== 'Antarctica')
 
         this.setState({ contenents })
       })
@@ -66,6 +68,11 @@ class Application extends Component {
   }
 
   render() {
+    if (this.state.contenents.length > 0) {
+      // console.log(this.state.contenents)
+      // console.log(this.props.store.countries.toJSON())
+    }
+
     return (
       <div className="Application">
         <Header
@@ -75,10 +82,17 @@ class Application extends Component {
 
         <Map
           className="map-display"
-          countries={this.state.contenents}
+          countries={this.props.store.countries || []}
           displayWidth={this.props.containerWidth}
           displayHeight={this.props.containerHeight}
         />
+
+        {/* <div className="map-display">
+          {this.props.store.countries
+            ? this.props.store.countries.length
+            : 'EMPTY'}
+          {this.state.contenents ? this.state.contenents.length : 'EMPTY'}
+        </div> */}
 
         <Footer />
 

@@ -21,7 +21,11 @@ const Store = types
     loadCountries: flow(function* loadCountries() {
       const data = yield getCountries()
 
-      const countries = data.map((item) => Country.create(item))
+      const countries = data.map((item) => {
+        const newCountry = Country.create(item)
+
+        return newCountry
+      })
 
       countries.forEach((country) => {
         //   let match = self.countries.find(

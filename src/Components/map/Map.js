@@ -26,7 +26,7 @@ class Map extends Component {
 
   handleSelection = (selectedArea) => {
     if (selectedArea) {
-      alert(selectedArea.properties.continentName)
+      alert(selectedArea.properties.name)
     }
   }
 

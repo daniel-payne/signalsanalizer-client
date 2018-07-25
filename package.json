@@ -7,6 +7,7 @@
     "@material-ui/icons": "^1.1.0",
     "d3": "^5.5.0",
     "d3-tip": "^0.9.1",
+    "geojson-rewind": "^0.3.1",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.3",
     "mobx-state-tree": "^3.0.0",

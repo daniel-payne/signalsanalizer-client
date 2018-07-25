@@ -1,4 +1,8 @@
-function getCountries(useCache = true) {
+import rewind from 'geojson-rewind'
+
+import { fixDateline } from '../../common'
+
+function getCountries(useCache = false) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
 
@@ -20,23 +24,25 @@ function getCountries(useCache = true) {
       return data.map((country) => {
         const geoJson = JSON.parse(country.countrySimpleGeoJSON)
 
-        geoJson.coordinates.forEach((data) => {
-          data[0].reverse()
-        })
+        const geoJsonRewound = rewind(geoJson, true)
 
         return {
-          type: 'Feature',
-          geometry: geoJson,
-          properties: {
-            countryName: country.countryName,
-          },
+          countryName: country.countryName,
+
+          geoJSON: JSON.stringify({
+            type: 'Feature',
+            geometry: {
+              type: geoJsonRewound.type,
+              coordinates: geoJsonRewound.coordinates,
+            },
+          }),
         }
       })
     })
     .then((data) => {
-      return data.filter(
-        (country) => country.properties.countryName !== 'Antarctica'
-      )
+      return data
+        .filter((country) => country.countryName !== 'Antarctica')
+        .filter((country) => country.countryName !== 'Fiji')
     })
     .then((data) => {
       if (window.localStorage && data) {
