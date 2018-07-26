@@ -17,38 +17,6 @@ class Application extends Component {
     contenents: [],
   }
 
-  componentDidMount() {
-    fetch('continents.json')
-      .then((response) => {
-        return response.json()
-      })
-      .then((json) => {
-        const contenents = json
-          .map((continent) => {
-            const geoJson = JSON.parse(continent.continentSimpleGeoJSON)
-
-            geoJson.coordinates.forEach((data) => {
-              data[0].reverse()
-            })
-
-            return {
-              continentName: continent.continentName,
-
-              geoJSON: JSON.stringify({
-                type: 'Feature',
-                geometry: {
-                  type: geoJson.type,
-                  coordinates: geoJson.coordinates,
-                },
-              }),
-            }
-          })
-          .filter((continent) => continent.continentName !== 'Antarctica')
-
-        this.setState({ contenents })
-      })
-  }
-
   toggleDrawer = (side, open) => () => {
     this.setState({
       [side]: open || !this.state[side],

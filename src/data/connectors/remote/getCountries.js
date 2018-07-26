@@ -2,31 +2,7 @@ import rewind from 'geojson-rewind'
 
 import { fixDateline, removeDateline } from '../../common'
 
-function getCountries(useCache = false) {
-  // const fixDateline2 = (geoJSONGeometry) => {
-  //   const result = JSON.parse(JSON.stringify(geoJSONGeometry))
-
-  //   for (let i = 0; i < result.coordinates.length; i++) {
-  //     for (let j = 0; j < result.coordinates[i].length; j++) {
-  //       let lastLong = undefined
-
-  //       for (let k = 0; k < result.coordinates[i][j].length; k++) {
-  //         let thisLng = result.coordinates[i][j][k][0]
-
-  //         if (thisLng < 0 && lastLong > 0) {
-  //           thisLng = thisLng - -180 + 180
-
-  //           result.coordinates[i][j][k][0] = thisLng
-  //         } else {
-  //           lastLong = thisLng
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   return result
-  // }
-
+function getCountries(useCache = true) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
 
