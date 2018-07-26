@@ -3,5 +3,9 @@
 }
 
 .Map .country {
-  fill: red;
+  fill: white;
+  stroke: gainsboro;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+  /* vector-effect: non-scaling-stroke; */
 }

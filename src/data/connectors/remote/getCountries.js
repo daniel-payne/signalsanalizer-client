@@ -1,8 +1,32 @@
 import rewind from 'geojson-rewind'
 
-import { fixDateline } from '../../common'
+import { fixDateline, removeDateline } from '../../common'
 
 function getCountries(useCache = false) {
+  // const fixDateline2 = (geoJSONGeometry) => {
+  //   const result = JSON.parse(JSON.stringify(geoJSONGeometry))
+
+  //   for (let i = 0; i < result.coordinates.length; i++) {
+  //     for (let j = 0; j < result.coordinates[i].length; j++) {
+  //       let lastLong = undefined
+
+  //       for (let k = 0; k < result.coordinates[i][j].length; k++) {
+  //         let thisLng = result.coordinates[i][j][k][0]
+
+  //         if (thisLng < 0 && lastLong > 0) {
+  //           thisLng = thisLng - -180 + 180
+
+  //           result.coordinates[i][j][k][0] = thisLng
+  //         } else {
+  //           lastLong = thisLng
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   return result
+  // }
+
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
 
@@ -24,7 +48,9 @@ function getCountries(useCache = false) {
       return data.map((country) => {
         const geoJson = JSON.parse(country.countrySimpleGeoJSON)
 
-        const geoJsonRewound = rewind(geoJson, true)
+        const geoJSONDateline = fixDateline(geoJson)
+
+        const geoJsonRewound = rewind(geoJSONDateline, true)
 
         return {
           countryName: country.countryName,
@@ -40,9 +66,8 @@ function getCountries(useCache = false) {
       })
     })
     .then((data) => {
-      return data
-        .filter((country) => country.countryName !== 'Antarctica')
-        .filter((country) => country.countryName !== 'Fiji')
+      return data.filter((country) => country.countryName !== 'Antarctica')
+      //.filter((country) => country.countryName === 'Fiji')
     })
     .then((data) => {
       if (window.localStorage && data) {
