@@ -9,18 +9,6 @@ import Map from './map/Map'
 import './Application.css'
 
 import Drawer from '@material-ui/core/Drawer'
-// import Button from '@material-ui/core/Button'
-// import List from '@material-ui/core/List'
-// import Divider from '@material-ui/core/Divider'
-
-// const styles = {
-//   list: {
-//     width: 250,
-//   },
-//   fullList: {
-//     width: 'auto',
-//   },
-// }
 
 class Application extends Component {
   state = {
@@ -68,11 +56,6 @@ class Application extends Component {
   }
 
   render() {
-    if (this.state.contenents.length > 0) {
-      // console.log(this.state.contenents)
-      // console.log(this.props.store.countries.toJSON())
-    }
-
     return (
       <div className="Application">
         <Header
@@ -86,13 +69,6 @@ class Application extends Component {
           displayWidth={this.props.containerWidth}
           displayHeight={this.props.containerHeight}
         />
-
-        {/* <div className="map-display">
-          {this.props.store.countries
-            ? this.props.store.countries.length
-            : 'EMPTY'}
-          {this.state.contenents ? this.state.contenents.length : 'EMPTY'}
-        </div> */}
 
         <Footer />
 

@@ -67,7 +67,6 @@ function getCountries(useCache = false) {
     })
     .then((data) => {
       return data.filter((country) => country.countryName !== 'Antarctica')
-      //.filter((country) => country.countryName === 'Fiji')
     })
     .then((data) => {
       if (window.localStorage && data) {
