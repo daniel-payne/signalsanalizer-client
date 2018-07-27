@@ -1,6 +1,6 @@
 import rewind from 'geojson-rewind'
 
-import { fixDateline, removeDateline } from '../../common'
+import { fixDateline } from '../../common'
 
 function getCountries(useCache = true) {
   if (useCache === true && window.localStorage) {
@@ -42,7 +42,11 @@ function getCountries(useCache = true) {
       })
     })
     .then((data) => {
-      return data.filter((country) => country.countryName !== 'Antarctica')
+      return data.filter(
+        (country) =>
+          country.countryName !== 'Antarctica' &&
+          country.countryName !== 'Caspian Sea'
+      )
     })
     .then((data) => {
       if (window.localStorage && data) {

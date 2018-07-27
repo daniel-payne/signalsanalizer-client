@@ -11,6 +11,10 @@ class Map extends Component {
     this.mapTarget = React.createRef()
   }
 
+  state = {
+    selectedCountry: undefined,
+  }
+
   componentDidMount() {
     buildMap(this.mapTarget.current)
   }
@@ -47,6 +51,8 @@ class Map extends Component {
           <g id="map-display-places" />
           <g id="map-display-features" />
           <g id="map-display-events" />
+
+          <g id="map-display-selected-country" />
         </g>
       </svg>
     )

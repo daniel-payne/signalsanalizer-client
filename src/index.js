@@ -12,8 +12,6 @@ import Application from './Components/Application'
 
 import store from './data/store'
 
-import Country from './data/models/Country'
-
 import './index.css'
 
 const theme = createMuiTheme({
@@ -26,7 +24,7 @@ const theme = createMuiTheme({
 store.loadCountries()
 
 ReactDOM.render(
-  <Provider color="red">
+  <Provider>
     <MuiThemeProvider theme={theme}>
       <Application store={store} />
     </MuiThemeProvider>
