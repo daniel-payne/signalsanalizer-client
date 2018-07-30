@@ -70,7 +70,12 @@ function zoomInto(d) {
   mapDisplay.call(zoomManager.transform, transform)
 }
 
-const renderMap = ({ targetSVG, onSelection, countries, projectionType }) => {
+const renderMap = ({
+  targetSVG,
+  onSelection,
+  countries,
+  projectionType = EQUIRECTANGULAR,
+}) => {
   const svg = d3.select(targetSVG)
   const countriesGrouping = svg.select('g#map-display-countries')
 

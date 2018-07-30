@@ -3,6 +3,7 @@ import makeInspectable from 'mobx-devtools-mst'
 
 import Country from './models/Country'
 import State from './models/State'
+import Conurbation from './models/Conurbation'
 import Preference from './models/Preference'
 
 import getCountries from './connectors/remote/getCountries'
@@ -48,6 +49,19 @@ const Store = types
 
       newStates.forEach((newState) => {
         self.states.push(newState)
+      })
+    }),
+    loadConurbations: flow(function* loadConurbations(contextReference) {
+      const data = yield getConurbations(contextReference)
+
+      const newConurbations = data.map((item) => {
+        const newConurbation = Conurbation.create(item)
+
+        return newConurbation
+      })
+
+      newConurbations.forEach((newConurbation) => {
+        self.conurbations.push(newConurbations)
       })
     }),
   }))

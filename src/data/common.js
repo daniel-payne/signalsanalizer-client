@@ -8,13 +8,17 @@ export const fixDateline = (geoJSONGeometry) => {
       for (let k = 0; k < result.coordinates[i][j].length; k++) {
         let thisLng = result.coordinates[i][j][k][0]
 
-        if (thisLng < 0 && lastLong > 0) {
-          thisLng = thisLng - -180 + 180
+        if (thisLng < 170 && lastLong > 170) {
+          console.log([thisLng, lastLong])
+          const newLng = -180 - (180 - thisLng) * -1
 
-          result.coordinates[i][j][k][0] = thisLng
-        } else if (thisLng > 0 && lastLong < 0) {
-          //thisLng = thisLng
-          //result.coordinates[i][j][k][0] = thisLng
+          result.coordinates[i][j][k][0] = newLng
+        } else if (thisLng > 170 && lastLong < 170) {
+          console.log([thisLng, lastLong])
+
+          const newLng = 180 + (-180 - thisLng)
+
+          result.coordinates[i][j][k][0] = newLng
         } else {
           lastLong = thisLng
         }
@@ -36,6 +40,8 @@ export const removeDateline = (geoJSONGeometry) => {
         let thisLng = result.coordinates[i][j][k][0]
 
         if (thisLng < 0 && lastLong > 0) {
+          result.coordinates[i][j].splice(k, 1)
+        } else if (thisLng > 0 && lastLong < 0) {
           result.coordinates[i][j].splice(k, 1)
         } else {
           lastLong = thisLng

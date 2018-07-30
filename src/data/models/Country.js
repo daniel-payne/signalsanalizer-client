@@ -2,6 +2,8 @@ import { types } from 'mobx-state-tree'
 
 const Country = types.model({
   countryName: types.string,
+  contextReference: types.string,
+
   geoJSON: types.string,
 })
 

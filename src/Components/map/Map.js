@@ -50,9 +50,14 @@ class Map extends Component {
           <g id="map-display-conurbations" />
           <g id="map-display-places" />
           <g id="map-display-features" />
+          <g id="map-display-markers" />
           <g id="map-display-events" />
 
           <g id="map-display-selected-country" />
+          <g id="map-display-selected-state" />
+          <g id="map-display-selected-county" />
+          <g id="map-display-selected-conurbation" />
+          <g id="map-display-selected-events" />
         </g>
       </svg>
     )
