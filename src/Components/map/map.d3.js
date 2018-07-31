@@ -25,7 +25,6 @@ let currentZoom
 export const buildMap = (targetSVG) => {
   const svg = d3.select(targetSVG)
   const zoomGrouping = svg.select('g#map-display-zoom')
-  const countryGrouping = svg.select('g#map-display-countries')
 
   const zoomed = (zoomGrouping) => () => {
     const transform = d3.event.transform
@@ -81,25 +80,15 @@ const renderMap = ({
   targetSVG,
   onSelection,
   countries,
-  selectedCountry,
+
   projectionType = MERCATOR,
 }) => {
   const svg = d3.select(targetSVG)
   const countriesGrouping = svg.select('g#map-display-countries')
-  const selectedCountryGrouping = svg.select('g#map-display-selected-country')
 
   const countryOutlineData = countries
     .filter((country) => country.outline)
-    .filter((country) => {
-      if (country && country.contextReference) {
-        if (selectedCountry && selectedCountry.contextReference) {
-          if (country.contextReference === selectedCountry.contextReference) {
-            return false
-          }
-        }
-      }
-      return true
-    })
+
     .map((country) => {
       const geoJson = JSON.parse(country.outline)
 
@@ -111,20 +100,6 @@ const renderMap = ({
 
       return geoJson
     })
-
-  let countryBorderData
-
-  if (selectedCountry) {
-    const geoJson = JSON.parse(selectedCountry.border)
-
-    geoJson.properties = {
-      name: selectedCountry.countryName,
-      contextReference: selectedCountry.contextReference,
-      type: COUNTRY,
-    }
-
-    countryBorderData = [geoJson]
-  }
 
   switch (projectionType) {
     case MERCATOR:
@@ -155,27 +130,13 @@ const renderMap = ({
     .selectAll('path')
     .attr('class', 'country')
     .style('fill', 'white')
-    .style('stroke-width', () => {
-      return selectedCountry === undefined ? 2 / currentZoom : 0
-    })
-    .style('stroke', () => {
-      return selectedCountry === undefined ? 'gainsboro' : 'white'
-    })
+    .style('stroke-width', 2 / currentZoom)
+    .style('stroke', 'gainsboro')
     .on('mouseover', function(d) {
-      if (selectedCountry === undefined) {
-        d3.select(this).style('fill', 'gainsboro')
-      } else {
-        d3.select(this).style('stroke-width', 2 / currentZoom)
-        d3.select(this).style('stroke', 'gainsboro')
-      }
+      d3.select(this).style('fill', 'gainsboro')
     })
     .on('mouseout', function(d) {
-      if (selectedCountry === undefined) {
-        d3.select(this).style('fill', 'white')
-      } else {
-        d3.select(this).style('stroke-width', 0)
-        d3.select(this).style('stroke', 'white')
-      }
+      d3.select(this).style('fill', 'white')
     })
     .on('click', function(d) {
       zoomInto(d)
@@ -184,27 +145,6 @@ const renderMap = ({
         onSelection(d)
       }
     })
-
-  if (selectedCountry) {
-    const selectedCountrySelection = selectedCountryGrouping
-      .selectAll('path')
-      .data(countryBorderData, (d) => d.properties.contextReference)
-
-    selectedCountrySelection
-      .enter()
-      .append('path')
-      .attr('d', pathConverter)
-
-    selectedCountrySelection.exit().remove()
-
-    selectedCountryGrouping
-      .selectAll('path')
-      .attr('class', 'country--selected')
-      .style('fill', 'gainsboro')
-      .style('stroke-width', () => {
-        return 2 / currentZoom
-      })
-  }
 }
 
 export default renderMap

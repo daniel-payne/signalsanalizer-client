@@ -39,7 +39,6 @@ class Application extends Component {
         <Map
           className="map-display"
           countries={this.props.store.countries || []}
-          selectedCountry={this.props.store.selectedCountry}
           displayWidth={this.props.containerWidth}
           displayHeight={this.props.containerHeight}
           onLoadCountry={this.handleLoadCountry}

@@ -4,8 +4,8 @@ import BottomNavigation from '@material-ui/core/BottomNavigation'
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 
 import TerrorismIcon from '@material-ui/icons/NewReleases'
-import MurderIcon from '@material-ui/icons/Accessibility'
-import LocationOnIcon from '@material-ui/icons/LocationOn'
+// import MurderIcon from '@material-ui/icons/Accessibility'
+// import LocationOnIcon from '@material-ui/icons/LocationOn'
 
 import './Footer.css'
 
@@ -28,9 +28,18 @@ class Footer extends Component {
         onChange={this.handleChange}
         showLabels
       >
-        <BottomNavigationAction label="a" icon={<TerrorismIcon />} />
-        <BottomNavigationAction label="b" icon={<MurderIcon />} />
-        <BottomNavigationAction label="c Index" icon={<LocationOnIcon />} />
+        {/* <BottomNavigationAction
+          label="Last 50 Years"
+          icon={<TerrorismIcon />}
+        />
+        <BottomNavigationAction
+          label="Last 10 Years"
+          icon={<TerrorismIcon />}
+        />
+        <BottomNavigationAction label="Last 5 Years" icon={<TerrorismIcon />} /> */}
+        <BottomNavigationAction label="This Year" icon={<TerrorismIcon />} />
+        <BottomNavigationAction label="This Month" icon={<TerrorismIcon />} />
+        <BottomNavigationAction label="This Week" icon={<TerrorismIcon />} />
       </BottomNavigation>
     )
   }

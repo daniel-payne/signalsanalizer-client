@@ -12,8 +12,8 @@ import getCountry from './connectors/remote/getCountry'
 import getStates from './connectors/remote/getStates'
 import getConurbations from './connectors/remote/getConurbations'
 
-import getCounties from './connectors/remote/getCounties'
-import getPlaces from './connectors/remote/getPlaces'
+// import getCounties from './connectors/remote/getCounties'
+// import getPlaces from './connectors/remote/getPlaces'
 
 const Store = types
   .model({

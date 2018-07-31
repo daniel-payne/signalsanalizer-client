@@ -1,9 +1,9 @@
 import rewind from 'geojson-rewind'
 import wkt from 'terraformer-wkt-parser'
 
-import { fixDateline, removeDateline } from '../../common'
+import { fixDateline } from '../../common'
 
-function getCountry(contextReference, useCache = false) {
+function getCountry(contextReference, useCache = true) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
 
