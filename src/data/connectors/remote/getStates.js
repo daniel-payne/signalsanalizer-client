@@ -1,4 +1,5 @@
 import rewind from 'geojson-rewind'
+import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
@@ -26,7 +27,7 @@ function getStates(contextReference, useCache = true) {
     })
     .then((data) => {
       return data.map((state) => {
-        const geoJson = JSON.parse(state.stateSimpleGeoJSON)
+        const geoJson = wkt.parse(state.outlineWKT)
 
         const geoJSONDateline = fixDateline(geoJson)
 
@@ -34,8 +35,9 @@ function getStates(contextReference, useCache = true) {
 
         return {
           stateName: state.stateName,
+          contextReference: state.contextReference,
 
-          geoJSON: JSON.stringify({
+          outline: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,

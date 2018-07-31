@@ -21,13 +21,74 @@ const Store = types
 
     countries: types.optional(types.array(Country), []),
     states: types.optional(types.array(State), []),
+    // counties
+    // conurbations
+    // markers
+    // events
 
     selectedCountry: types.maybe(types.reference(Country)),
 
-    preference: types.optional(Preference, {}),
+    contextReference: types.optional(types.string, ''),
+    temporalReference: types.optional(types.string, 'WEEK'),
+
+    // displayedCountries={this.props.store.displayedCountries}
+    // displayedStates={this.props.store.displayedStates}
+    // displayedCounties={this.props.store.displayedCounties}
+    // displayedConurbations={
+    //   this.props.store.displayedConurbations
+    // }
+    // displayedMarkers={this.props.store.displayedMarkers}
+    // displayedEvents={this.props.store.displayedEvents}
+    // selectedCountry={this.props.store.selectedCountry}
+    // selectedState={this.props.store.selectedState}
+    // selectedCounty={this.props.store.selectedCounty}
+    // selectedConurbation={this.props.store.selectedConurbation}
+    // selectedPlace={this.props.store.selectedPlace}
+    // selectedPeriod={this.props.store.selectedPeriod}
   })
+  .views((self) => ({
+    get displayedCountries() {
+      return self.countries.filter(
+        (country) =>
+          self.contextReference === ''
+            ? true
+            : self.contextReference.indexOf(country.contextReference) > -1
+      )
+    },
+    get displayedStates() {
+      const contextReference = self.contextReference
+      const contextReferenceLength = contextReference.length
+
+      if (contextReferenceLength === 0) {
+        return []
+      }
+
+      return self.states.filter(
+        (state) =>
+          state.contextReference
+            .substr(0, contextReferenceLength)
+            .indexOf(contextReference) > -1
+      )
+    },
+    // numberOfPeopleOlderThan(age) {
+    //   return self.users.filter((user) => user.age > age).length
+    // },
+  }))
+
   .actions((self) => ({
-    chooseCountry(country) {},
+    choosePlace(contextReference) {
+      self.contextReference = contextReference
+
+      if (contextReference.length === 3) {
+        self.loadCountry(contextReference).then(() => {
+          self.loadStates(contextReference)
+          //self.loadConurbations(contextReference)
+        })
+      }
+    },
+    choosePeriod(temporalReference) {
+      self.temporalReference = temporalReference
+    },
   }))
   .actions((self) => ({
     loadCountries: flow(function* loadCountries() {
@@ -40,7 +101,13 @@ const Store = types
       })
 
       newCountries.forEach((newCountry) => {
-        self.countries.push(newCountry)
+        const oldCountry = self.countries.find(
+          (country) => country.contextReference === newCountry.contextReference
+        )
+
+        if (!oldCountry) {
+          self.countries.push(newCountry)
+        }
       })
     }),
     loadCountry: flow(function* loadCountry(contextReference) {
@@ -72,7 +139,13 @@ const Store = types
       })
 
       newStates.forEach((newState) => {
-        self.states.push(newState)
+        const oldState = self.states.find(
+          (state) => state.contextReference === newState.contextReference
+        )
+
+        if (!oldState) {
+          self.states.push(newState)
+        }
       })
     }),
     loadConurbations: flow(function* loadConurbations(contextReference) {

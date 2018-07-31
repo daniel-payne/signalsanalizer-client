@@ -3,10 +3,12 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .Application .map-display {
   flex-grow: 1;
   background-color: gainsboro;
   position: relative;
+  overflow: hidden;
 }

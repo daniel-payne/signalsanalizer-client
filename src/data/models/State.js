@@ -1,9 +1,12 @@
 import { types } from 'mobx-state-tree'
 
 const State = types.model({
-  stateReference: types.string,
+  contextReference: types.identifier,
+
   stateName: types.string,
-  geoJSON: types.string,
+
+  outline: types.maybe(types.string),
+  border: types.maybe(types.string),
 })
 
 export default State

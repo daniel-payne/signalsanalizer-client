@@ -1,0 +1,15 @@
+.CurrentData {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  height: calc(100% - 10px);
+}
+
+.CurrentData .data-list {
+  border: 1px solid gainsboro;
+  margin: 8px;
+  padding: 8px;
+  overflow-y: auto;
+  width: 200px;
+  flex: none;
+}
