@@ -17,6 +17,11 @@ export const ORTHOGRAPHIC = 'ORTHOGRAPHIC'
 export const EQUIRECTANGULAR = 'EQUIRECTANGULAR'
 export const PROJECTION_TYPES = [MERCATOR, ORTHOGRAPHIC, EQUIRECTANGULAR]
 
+export const COUNTRY = 'COUNTRY'
+export const MAP_TYPES = [COUNTRY]
+
+let currentZoom
+
 export const buildMap = (targetSVG) => {
   const svg = d3.select(targetSVG)
   const zoomGrouping = svg.select('g#map-display-zoom')
@@ -32,9 +37,11 @@ export const buildMap = (targetSVG) => {
 
     zoomGrouping.attr('transform', transform)
 
-    countryGrouping.selectAll('path').style('stroke-width', () => {
+    svg.selectAll('path').style('stroke-width', () => {
       return 2 / transform.k
     })
+
+    currentZoom = transform.k
   }
 
   zoomManager = d3.zoom().on('zoom', zoomed(zoomGrouping))
@@ -74,20 +81,50 @@ const renderMap = ({
   targetSVG,
   onSelection,
   countries,
-  projectionType = EQUIRECTANGULAR,
+  selectedCountry,
+  projectionType = MERCATOR,
 }) => {
   const svg = d3.select(targetSVG)
   const countriesGrouping = svg.select('g#map-display-countries')
+  const selectedCountryGrouping = svg.select('g#map-display-selected-country')
 
-  const displayData = countries.map((feature) => {
-    const geoJson = JSON.parse(feature.geoJSON)
+  const countryOutlineData = countries
+    .filter((country) => country.outline)
+    .filter((country) => {
+      if (country && country.contextReference) {
+        if (selectedCountry && selectedCountry.contextReference) {
+          if (country.contextReference === selectedCountry.contextReference) {
+            return false
+          }
+        }
+      }
+      return true
+    })
+    .map((country) => {
+      const geoJson = JSON.parse(country.outline)
+
+      geoJson.properties = {
+        name: country.countryName,
+        contextReference: country.contextReference,
+        type: COUNTRY,
+      }
+
+      return geoJson
+    })
+
+  let countryBorderData
+
+  if (selectedCountry) {
+    const geoJson = JSON.parse(selectedCountry.border)
 
     geoJson.properties = {
-      name: feature.countryName,
+      name: selectedCountry.countryName,
+      contextReference: selectedCountry.contextReference,
+      type: COUNTRY,
     }
 
-    return geoJson
-  })
+    countryBorderData = [geoJson]
+  }
 
   switch (projectionType) {
     case MERCATOR:
@@ -103,19 +140,42 @@ const renderMap = ({
       pathConverter = mercatorPathConverter
   }
 
-  countriesGrouping
+  const countriesSelection = countriesGrouping
     .selectAll('path')
-    .data(displayData)
+    .data(countryOutlineData, (d) => d.properties.contextReference)
+
+  countriesSelection
     .enter()
     .append('path')
     .attr('d', pathConverter)
+
+  countriesSelection.exit().remove()
+
+  countriesGrouping
+    .selectAll('path')
     .attr('class', 'country')
-    //.attr('vector-effect', 'non-scaling-stroke')
+    .style('fill', 'white')
+    .style('stroke-width', () => {
+      return selectedCountry === undefined ? 2 / currentZoom : 0
+    })
+    .style('stroke', () => {
+      return selectedCountry === undefined ? 'gainsboro' : 'white'
+    })
     .on('mouseover', function(d) {
-      d3.select(this).style('fill', 'gainsboro')
+      if (selectedCountry === undefined) {
+        d3.select(this).style('fill', 'gainsboro')
+      } else {
+        d3.select(this).style('stroke-width', 2 / currentZoom)
+        d3.select(this).style('stroke', 'gainsboro')
+      }
     })
     .on('mouseout', function(d) {
-      d3.select(this).style('fill', 'white')
+      if (selectedCountry === undefined) {
+        d3.select(this).style('fill', 'white')
+      } else {
+        d3.select(this).style('stroke-width', 0)
+        d3.select(this).style('stroke', 'white')
+      }
     })
     .on('click', function(d) {
       zoomInto(d)
@@ -124,6 +184,27 @@ const renderMap = ({
         onSelection(d)
       }
     })
+
+  if (selectedCountry) {
+    const selectedCountrySelection = selectedCountryGrouping
+      .selectAll('path')
+      .data(countryBorderData, (d) => d.properties.contextReference)
+
+    selectedCountrySelection
+      .enter()
+      .append('path')
+      .attr('d', pathConverter)
+
+    selectedCountrySelection.exit().remove()
+
+    selectedCountryGrouping
+      .selectAll('path')
+      .attr('class', 'country--selected')
+      .style('fill', 'gainsboro')
+      .style('stroke-width', () => {
+        return 2 / currentZoom
+      })
+  }
 }
 
 export default renderMap

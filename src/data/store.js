@@ -7,8 +7,11 @@ import Conurbation from './models/Conurbation'
 import Preference from './models/Preference'
 
 import getCountries from './connectors/remote/getCountries'
+
+import getCountry from './connectors/remote/getCountry'
 import getStates from './connectors/remote/getStates'
 import getConurbations from './connectors/remote/getConurbations'
+
 import getCounties from './connectors/remote/getCounties'
 import getPlaces from './connectors/remote/getPlaces'
 
@@ -18,6 +21,8 @@ const Store = types
 
     countries: types.optional(types.array(Country), []),
     states: types.optional(types.array(State), []),
+
+    selectedCountry: types.maybe(types.reference(Country)),
 
     preference: types.optional(Preference, {}),
   })
@@ -37,6 +42,25 @@ const Store = types
       newCountries.forEach((newCountry) => {
         self.countries.push(newCountry)
       })
+    }),
+    loadCountry: flow(function* loadCountry(contextReference) {
+      const data = yield getCountry(contextReference)
+
+      const country = self.countries.find(
+        (country) => country.contextReference === contextReference
+      )
+
+      if (country) {
+        country.border = data[0].border
+
+        self.selectedCountry = country
+      } else {
+        const newCountry = Country.create(data[0])
+
+        self.countries.push(newCountry)
+
+        self.selectedCountry = newCountry
+      }
     }),
     loadStates: flow(function* loadStates(contextReference) {
       const data = yield getStates(contextReference)

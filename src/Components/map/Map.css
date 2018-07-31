@@ -2,8 +2,16 @@
   background-color: lightsteelblue;
 }
 
-.Map .country {
+.Map .countryx {
   fill: white;
+  /* stroke: gainsboro;
+  stroke-width: 1; */
+  shape-rendering: crispEdges;
+  /* vector-effect: non-scaling-stroke; */
+}
+
+.Map .country--selectedx {
+  /* fill: red; */
   stroke: gainsboro;
   stroke-width: 1;
   shape-rendering: crispEdges;

@@ -23,10 +23,15 @@ class Application extends Component {
     })
   }
 
+  handleLoadCountry = (contextReference) => {
+    this.props.store.loadCountry(contextReference)
+  }
+
   render() {
     return (
       <div className="Application">
         <Header
+          title={this.props.store.countries.length}
           onOpenLeftDrawer={this.toggleDrawer('left', true)}
           onOpenRightDrawer={this.toggleDrawer('right', true)}
         />
@@ -34,8 +39,10 @@ class Application extends Component {
         <Map
           className="map-display"
           countries={this.props.store.countries || []}
+          selectedCountry={this.props.store.selectedCountry}
           displayWidth={this.props.containerWidth}
           displayHeight={this.props.containerHeight}
+          onLoadCountry={this.handleLoadCountry}
         />
 
         <Footer />
@@ -68,7 +75,10 @@ class Application extends Component {
               width: '600px',
             }}
           >
-            Right Drawer {this.props.store.countries.length}
+            Right Drawer
+            {this.props.store.selectedCountry
+              ? this.props.store.selectedCountry.countryName
+              : 'NONE'}
           </div>
         </Drawer>
       </div>

@@ -3,7 +3,7 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline, removeDateline } from '../../common'
 
-function getCountries(useCache = false) {
+function getCountry(contextReference, useCache = false) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
 
@@ -12,10 +12,14 @@ function getCountries(useCache = false) {
     }
   }
 
-  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/countries`)
+  return fetch(
+    `${
+      process.env.REACT_APP_REST_ENDPOINT
+    }/geographic/country?contextReference=${contextReference}`
+  )
     .then((response) => {
       if (response.status !== 200) {
-        console.log('ERROR /geographic/countries: ' + response.status)
+        console.log('ERROR /geographic/country: ' + response.status)
         return
       }
 
@@ -23,7 +27,7 @@ function getCountries(useCache = false) {
     })
     .then((data) => {
       return data.map((country) => {
-        const geoJson = wkt.parse(country.outlineWKT)
+        const geoJson = wkt.parse(country.borderWKT)
 
         let geoJSONDateline = geoJson
 
@@ -40,7 +44,7 @@ function getCountries(useCache = false) {
           countryName: country.countryName,
           contextReference: country.contextReference,
 
-          outline: JSON.stringify({
+          border: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,
@@ -59,4 +63,4 @@ function getCountries(useCache = false) {
     })
 }
 
-export default getCountries
+export default getCountry

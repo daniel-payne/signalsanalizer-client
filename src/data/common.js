@@ -9,13 +9,10 @@ export const fixDateline = (geoJSONGeometry) => {
         let thisLng = result.coordinates[i][j][k][0]
 
         if (thisLng < 170 && lastLong > 170) {
-          console.log([thisLng, lastLong])
           const newLng = -180 - (180 - thisLng) * -1
 
           result.coordinates[i][j][k][0] = newLng
         } else if (thisLng > 170 && lastLong < 170) {
-          console.log([thisLng, lastLong])
-
           const newLng = 180 + (-180 - thisLng)
 
           result.coordinates[i][j][k][0] = newLng

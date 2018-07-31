@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 import renderMap, { buildMap } from './map.d3'
 
@@ -11,6 +12,15 @@ class Map extends Component {
     this.mapTarget = React.createRef()
   }
 
+  static propTypes = {
+    displayWidth: PropTypes.number,
+    displayHeight: PropTypes.number,
+    countries: PropTypes.array,
+    selectedCountry: PropTypes.object,
+
+    onLoadCountry: PropTypes.func,
+  }
+
   state = {
     selectedCountry: undefined,
   }
@@ -20,17 +30,19 @@ class Map extends Component {
   }
 
   componentDidUpdate() {
-    const { countries } = this.props
+    const { countries, selectedCountry } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
 
-    renderMap({ targetSVG, onSelection, countries })
+    renderMap({ targetSVG, onSelection, countries, selectedCountry })
   }
 
   handleSelection = (selectedArea) => {
-    if (selectedArea) {
-      alert(selectedArea.properties.name)
+    const { onLoadCountry } = this.props
+
+    if (onLoadCountry && selectedArea) {
+      onLoadCountry(selectedArea.properties.contextReference)
     }
   }
 

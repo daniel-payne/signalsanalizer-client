@@ -24,7 +24,7 @@ class Header extends Component {
             <MenuIcon />
           </IconButton>
           <Typography className="title" variant="title" color="inherit">
-            Signals Analizer
+            {this.props.title ? this.props.title : 'Signals Analizer'}
           </Typography>
           <IconButton
             className="menuButton-right"
