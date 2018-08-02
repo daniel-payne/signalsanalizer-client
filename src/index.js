@@ -21,16 +21,16 @@ const theme = createMuiTheme({
   },
 })
 
-store.loadCountries()
-
-ReactDOM.render(
-  <Provider>
-    <MuiThemeProvider theme={theme}>
-      <Application store={store} />
-    </MuiThemeProvider>
-  </Provider>,
-  document.getElementById('root')
-)
+store.loadCountries().then(() => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <Application />
+      </MuiThemeProvider>
+    </Provider>,
+    document.getElementById('root')
+  )
+})
 
 registerServiceWorker()
 // REPLACE WITH

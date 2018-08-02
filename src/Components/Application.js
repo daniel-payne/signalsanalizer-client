@@ -1,22 +1,46 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Dimensions from 'react-dimensions'
+
+import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router-dom'
+import Dimensions from 'react-dimensions' // try react-sizes
 import { observer, inject } from 'mobx-react'
+
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Drawer from '@material-ui/core/Drawer'
 
 import Header from './header/Header'
 import Footer from './footer/Footer'
-import Map from './map/Map'
+// import Map from './map/Map'
 import CurrentData from './currentData/CurrentData'
 
 import './Application.css'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Drawer from '@material-ui/core/Drawer'
+class Manager extends Component {
+  state = {}
+
+  static getDerivedStateFromProps(props, state) {
+    const display = props.location.pathname.replace('/', '')
+
+    if (props.store && display !== state.display) {
+      props.store.validateRoute(display)
+
+      return { display }
+    }
+
+    return null
+  }
+
+  render() {
+    return <React.Fragment>{this.props.children}</React.Fragment>
+  }
+}
+
+const RouteManager = withRouter(Manager)
 
 class Application extends Component {
   state = {
     left: false,
     right: false,
+    location: undefined,
     contenents: [],
   }
 
@@ -26,25 +50,25 @@ class Application extends Component {
     })
   }
 
-  handleChoosePlace = (contextReference) => {
-    // alert(contextReference)
-    this.props.store.choosePlace(contextReference)
-  }
-
-  handleChoosePeriod = (temporalReference) => {
-    alert(temporalReference)
-    //this.props.store.loadPeriod(temporalReference)
-  }
-
   render() {
+    let total //eslint-disable-line no-unused-vars
+    //Hack to ensure all is drawn correctly
+    total += this.props.store.displayedCountries ? this.props.store.displayedCountries.length : 0
+    total += this.props.store.displayedStates ? this.props.store.displayedStates.length : 0
+    total += this.props.store.displayedCounties ? this.props.store.displayedCounties.length : 0
+    total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
+
     return (
       <div className="Application">
         <Router>
-          <React.Fragment>
+          <RouteManager store={this.props.store}>
             <CssBaseline />
 
             <Header
-              title={this.props.store.displayedStates.length}
+              selectedCountry={this.props.store.selectedCountry}
+              selectedState={this.props.store.selectedState}
+              selectedCounty={this.props.store.selectedCounty}
+              selectedConurbation={this.props.store.selectedConurbation}
               onOpenLeftDrawer={this.toggleDrawer('left', true)}
               onOpenRightDrawer={this.toggleDrawer('right', true)}
             />
@@ -58,50 +82,16 @@ class Application extends Component {
             /> */}
             <Switch>
               <Route
-                path="/:view/:duration/:contextReference"
+                path="/:display"
                 render={({ match }) => {
-                  let { view, duration, contextReference } = match.params
-
-                  view = view.toUpperCase()
-
-                  if (
-                    duration.toUpperCase() !== this.props.store.selectedDuration
-                  ) {
-                    this.props.store.loadPeriod(duration)
-                  }
-
-                  if (
-                    contextReference.toUpperCase() !==
-                    this.props.store.selectedPlace
-                  ) {
-                    this.props.store.loadPlace(contextReference)
-                  }
-
                   return (
                     <CurrentData
                       className="map-display"
-                      {...this.props.store}
-                      onChoosePlace={this.handleChoosePlace}
-                      onChoosePeriod={this.handleChoosePeriod}
-                    />
-                  )
-                }}
-              />
-              <Route
-                path="/:view/:duration"
-                render={({ match }) => {
-                  let { view, duration } = match.params
-
-                  view = view.toUpperCase()
-                  duration = duration.toUpperCase()
-                  const contextReference = undefined
-
-                  return (
-                    <CurrentData
-                      className="map-display"
-                      {...this.props.store}
-                      onChoosePlace={this.handleChoosePlace}
-                      onChoosePeriod={this.handleChoosePeriod}
+                      countries={this.props.store.countries}
+                      states={this.props.store.states}
+                      displayedCountries={this.props.store.displayedCountries}
+                      displayedStates={this.props.store.displayedStates}
+                      displayedConurbations={this.props.store.displayedConurbations}
                     />
                   )
                 }}
@@ -110,10 +100,6 @@ class Application extends Component {
                 path="/"
                 exact={false}
                 render={({ match }) => {
-                  const view = 'MERCATOR'
-                  const duration = 'YEAR'
-                  const contextReference = undefined
-
                   return (
                     <CurrentData
                       className="map-display"
@@ -121,35 +107,21 @@ class Application extends Component {
                       states={this.props.store.states}
                       displayedCountries={this.props.store.displayedCountries}
                       displayedStates={this.props.store.displayedStates}
-                      onChoosePlace={this.handleChoosePlace}
-                      onChoosePeriod={this.handleChoosePeriod}
+                      displayedConurbations={this.props.store.displayedConurbations}
                     />
                   )
                 }}
               />
             </Switch>
 
-            <Footer />
+            <Footer temporalReference={this.props.store.temporalReference} />
 
-            <Drawer
-              open={this.state.left}
-              onClose={this.toggleDrawer('left', false)}
-              anchor="left"
-            >
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={this.toggleDrawer('left', false)}
-                onKeyDown={this.toggleDrawer('left', false)}
-              >
+            <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)} anchor="left">
+              <div tabIndex={0} role="button" onClick={this.toggleDrawer('left', false)} onKeyDown={this.toggleDrawer('left', false)}>
                 Left Drawer
               </div>
             </Drawer>
-            <Drawer
-              open={this.state.right}
-              onClose={this.toggleDrawer('right', false)}
-              anchor="right"
-            >
+            <Drawer open={this.state.right} onClose={this.toggleDrawer('right', false)} anchor="right">
               <div
                 tabIndex={0}
                 role="button"
@@ -160,12 +132,10 @@ class Application extends Component {
                 }}
               >
                 Right Drawer
-                {this.props.store.selectedCountry
-                  ? this.props.store.selectedCountry.countryName
-                  : 'NONE'}
+                {this.props.store.selectedCountry ? this.props.store.selectedCountry.countryName : 'NONE'}
               </div>
             </Drawer>
-          </React.Fragment>
+          </RouteManager>
         </Router>
       </div>
     )

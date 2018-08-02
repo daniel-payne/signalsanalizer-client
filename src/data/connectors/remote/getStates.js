@@ -4,19 +4,16 @@ import wkt from 'terraformer-wkt-parser'
 import { fixDateline } from '../../common'
 
 function getStates(contextReference, useCache = true) {
+  console.log('LOADING STATES ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`states:${contextReference}`)
-
+    console.log('LOADED STATES ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
   }
 
-  return fetch(
-    `${
-      process.env.REACT_APP_REST_ENDPOINT
-    }/geographic/states?contextReference=${contextReference}`
-  )
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/states?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
         console.log('ERROR /geographic/states: ' + response.status)
@@ -49,12 +46,9 @@ function getStates(contextReference, useCache = true) {
     })
     .then((data) => {
       if (window.localStorage && data) {
-        window.localStorage.setItem(
-          `states:${contextReference}`,
-          JSON.stringify(data)
-        )
+        window.localStorage.setItem(`states:${contextReference}`, JSON.stringify(data))
       }
-
+      console.log('LOADED STATES ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }

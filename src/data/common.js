@@ -49,3 +49,58 @@ export const removeDateline = (geoJSONGeometry) => {
 
   return result
 }
+
+export const GLOBAL = 'GLOBAL'
+export const COUNTRY = 'COUNTRY'
+export const STATE = 'STATE'
+export const COUNTY = 'COUNTY'
+export const CONURBATION = 'CONURBATION'
+
+export const ZOOM_LEVELS = [GLOBAL, COUNTRY, STATE, COUNTY, CONURBATION]
+
+export const extractContextType = function(contextReference) {
+  const conurbationStartPosition = contextReference.indexOf('@')
+  const parts = contextReference.split('.')
+
+  if (contextReference.length === 0) {
+    return GLOBAL
+  } else if (contextReference.length === 3) {
+    return COUNTRY
+  } else if (conurbationStartPosition > -1) {
+    return CONURBATION
+  } else if (parts.length === 2) {
+    return STATE
+  } else if (parts.length === 3) {
+    return COUNTY
+  }
+}
+
+export const extractContextPart = function(contextReference, level) {
+  const conurbationStartPosition = contextReference.indexOf('@')
+  const parts = contextReference.split('.')
+
+  if (level === COUNTRY) {
+    return contextReference.substr(0, 3)
+  } else if (level === COUNTY && conurbationStartPosition === -1) {
+    return contextReference
+  } else if (level === COUNTY && conurbationStartPosition > -1) {
+    return contextReference.substr(0, conurbationStartPosition)
+  } else if (level === STATE && parts.length > 1) {
+    return parts[0] + '.' + parts[1] + '.'
+  } else if (level === CONURBATION && conurbationStartPosition > -1) {
+    return contextReference.substr(conurbationStartPosition)
+  }
+}
+
+export const extractContextCountry = function(contextReference) {
+  return extractContextPart(contextReference, COUNTRY)
+}
+export const extractContextState = function(contextReference) {
+  return extractContextPart(contextReference, STATE)
+}
+export const extractContextCounty = function(contextReference) {
+  return extractContextPart(contextReference, COUNTY)
+}
+export const extractContextConurbation = function(contextReference) {
+  return extractContextPart(contextReference, CONURBATION)
+}

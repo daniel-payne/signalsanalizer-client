@@ -4,9 +4,10 @@ import wkt from 'terraformer-wkt-parser'
 import { fixDateline } from '../../common'
 
 function getCountries(useCache = true) {
+  console.log('LOADING COUNTRIES ------------------------')
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)
-
+    console.log('LOADED COUNTRIES ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
@@ -27,10 +28,7 @@ function getCountries(useCache = true) {
 
         let geoJSONDateline = geoJson
 
-        if (
-          country.countryName === 'Russia' ||
-          country.countryName === 'Fiji'
-        ) {
+        if (country.countryName === 'Russia' || country.countryName === 'Fiji') {
           geoJSONDateline = fixDateline(geoJson)
         }
 
@@ -54,7 +52,7 @@ function getCountries(useCache = true) {
       if (useCache === true && window.localStorage && data) {
         window.localStorage.setItem(`countries`, JSON.stringify(data))
       }
-
+      console.log('LOADED COUNTRIES ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }

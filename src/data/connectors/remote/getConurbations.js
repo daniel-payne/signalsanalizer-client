@@ -1,23 +1,19 @@
 import rewind from 'geojson-rewind'
+import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
 function getConurbations(contextReference, useCache = true) {
+  console.log('LOADING CONURBATIONS ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
-    const result = window.localStorage.getItem(
-      `conurbations:${contextReference}`
-    )
-
+    const result = window.localStorage.getItem(`conurbations:${contextReference}`)
+    console.log('LOADED CONURBATIONS ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
   }
 
-  return fetch(
-    `${
-      process.env.REACT_APP_REST_ENDPOINT
-    }/geographic/conurbations?contextReference=${contextReference}`
-  )
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/conurbations?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
         console.log('ERROR /geographic/conurbations: ' + response.status)
@@ -28,7 +24,7 @@ function getConurbations(contextReference, useCache = true) {
     })
     .then((data) => {
       return data.map((conurbation) => {
-        const geoJson = JSON.parse(conurbation.conurbationSimpleGeoJSON)
+        const geoJson = wkt.parse(conurbation.borderWKT)
 
         const geoJSONDateline = fixDateline(geoJson)
 
@@ -36,8 +32,9 @@ function getConurbations(contextReference, useCache = true) {
 
         return {
           conurbationName: conurbation.conurbationName,
+          contextReference: conurbation.contextReference,
 
-          geoJSON: JSON.stringify({
+          border: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,
@@ -49,12 +46,9 @@ function getConurbations(contextReference, useCache = true) {
     })
     .then((data) => {
       if (window.localStorage && data) {
-        window.localStorage.setItem(
-          `conurbations:${contextReference}`,
-          JSON.stringify(data)
-        )
+        window.localStorage.setItem(`conurbations:${contextReference}`, JSON.stringify(data))
       }
-
+      console.log('LOADED CONURBATIONS ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }

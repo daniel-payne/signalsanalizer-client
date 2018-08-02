@@ -3,32 +3,32 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getCountry(contextReference, useCache = true) {
-  console.log('LOADING COUNTRY ------------------------')
+function getState(contextReference, useCache = true) {
+  console.log('LOADING STATE ------------------------')
   if (useCache === true && window.localStorage) {
-    const result = window.localStorage.getItem(`country:${contextReference}`)
-    console.log('LOADED COUNTRY ------------------------ FROM CACHE')
+    const result = window.localStorage.getItem(`state:${contextReference}`)
+    console.log('LOADED STATE ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
   }
 
-  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/country?contextReference=${contextReference}`)
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/state?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
-        console.log('ERROR /geographic/country: ' + response.status)
+        console.log('ERROR /geographic/state: ' + response.status)
         return
       }
 
       return response.json()
     })
     .then((data) => {
-      return data.map((country) => {
-        const geoJson = wkt.parse(country.borderWKT)
+      return data.map((state) => {
+        const geoJson = wkt.parse(state.borderWKT)
 
         let geoJSONDateline = geoJson
 
-        if (country.countryName === 'Russia' || country.countryName === 'Fiji') {
+        if (state.stateName === 'Russia' || state.stateName === 'Fiji') {
           geoJSONDateline = fixDateline(geoJson)
         }
 
@@ -36,13 +36,13 @@ function getCountry(contextReference, useCache = true) {
 
         let geoJsonCenterpoint
 
-        if (country.centerpointWKT) {
-          geoJsonCenterpoint = wkt.parse(country.centerpointWKT)
+        if (state.centerpointWKT) {
+          geoJsonCenterpoint = wkt.parse(state.centerpointWKT)
         }
 
         return {
-          countryName: country.countryName,
-          contextReference: country.contextReference,
+          stateName: state.stateName,
+          contextReference: state.contextReference,
 
           centerpoint: geoJsonCenterpoint,
 
@@ -58,11 +58,11 @@ function getCountry(contextReference, useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`country:${contextReference}`, JSON.stringify(data))
+        window.localStorage.setItem(`state:${contextReference}`, JSON.stringify(data))
       }
-      console.log('LOADED COUNTRY ------------------------ FROM SERVER ' + data.length)
+      console.log('LOADED STATE ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }
 
-export default getCountry
+export default getState

@@ -10,28 +10,26 @@ import './Header.css'
 
 class Header extends Component {
   render() {
-    const { onOpenLeftDrawer, onOpenRightDrawer } = this.props
+    const { selectedCountry, selectedState, selectedCounty, selectedConurbation, onOpenLeftDrawer, onOpenRightDrawer } = this.props
 
     return (
       <AppBar className="Header" position="static">
         <Toolbar>
-          <IconButton
-            className="menuButton-left"
-            color="inherit"
-            aria-label="Menu"
-            onClick={onOpenLeftDrawer}
-          >
+          <IconButton className="menuButton-left" color="inherit" aria-label="Menu" onClick={onOpenLeftDrawer}>
             <MenuIcon />
           </IconButton>
           <Typography className="title" variant="title" color="inherit">
             {this.props.title ? this.props.title : 'Signals Analizer'}
+            &nbsp;
+            {selectedCountry ? selectedCountry.countryName : 'x'}
+            &nbsp;
+            {selectedState ? selectedState.stateName : 'x'}
+            &nbsp;
+            {selectedCounty ? selectedCounty.countyName : 'x'}
+            &nbsp;
+            {selectedConurbation ? selectedConurbation.conurbationName : 'x'}
           </Typography>
-          <IconButton
-            className="menuButton-right"
-            color="inherit"
-            aria-label="Menu"
-            onClick={onOpenRightDrawer}
-          >
+          <IconButton className="menuButton-right" color="inherit" aria-label="Menu" onClick={onOpenRightDrawer}>
             <MenuIcon />
           </IconButton>
         </Toolbar>
