@@ -21,7 +21,7 @@ const theme = createMuiTheme({
   },
 })
 
-store.loadCountries().then(() => {
+store.loadGlobe().then(() => {
   ReactDOM.render(
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>

@@ -1,8 +1,9 @@
 import rewind from 'geojson-rewind'
+import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getCounties(contextReference, useCache = true) {
+function getCounties(contextReference, useCache = false) {
   console.log('LOADING COUNTIES ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`counties:${contextReference}`)
@@ -23,7 +24,7 @@ function getCounties(contextReference, useCache = true) {
     })
     .then((data) => {
       return data.map((county) => {
-        const geoJson = JSON.parse(county.countySimpleGeoJSON)
+        const geoJson = wkt.parse(county.outlineWKT)
 
         const geoJSONDateline = fixDateline(geoJson)
 
@@ -31,8 +32,9 @@ function getCounties(contextReference, useCache = true) {
 
         return {
           countyName: county.countyName,
+          contextReference: county.contextReference,
 
-          geoJSON: JSON.stringify({
+          outline: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,

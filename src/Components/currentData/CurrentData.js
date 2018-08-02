@@ -47,7 +47,8 @@ class CurrentData extends Component {
 
   render() {
     const { PlaceListing } = this
-    const { countries, displayedCountries, displayedStates, displayedConurbations, displayedCounties } = this.props
+    const { countries, selectedCountry } = this.props
+    const { selectedState } = selectedCountry || {}
 
     return (
       <div className="CurrentData">
@@ -56,26 +57,26 @@ class CurrentData extends Component {
           <PlaceListing places={countries} />
         </div>
 
-        <div className="data-list">
-          <h4>Displayed Countries</h4>
-          <PlaceListing places={displayedCountries} />
-        </div>
-        <div className="data-list">
-          <h4>Displayed States</h4>
-          <PlaceListing places={displayedStates} />
-        </div>
-        <div className="data-list">
-          <h4>Displayed Conurbations</h4>
-          <PlaceListing places={displayedConurbations} />
-        </div>
-        <div className="data-list">
-          <h4>Displayed Counties</h4>
-          <PlaceListing places={displayedCounties} />
-        </div>
+        {selectedCountry && (
+          <div className="data-list">
+            <h4>States</h4>
+            <PlaceListing places={selectedCountry.states} />
+          </div>
+        )}
 
-        <div className="data-list">Displayed Summaries</div>
-        <div className="data-list">Displayed Markers</div>
-        <div className="data-list">Displayed Events</div>
+        {selectedState && (
+          <div className="data-list">
+            <h4>Counties</h4>
+            <PlaceListing places={selectedState.counties} />
+          </div>
+        )}
+
+        {selectedState && (
+          <div className="data-list">
+            <h4>Conurbations</h4>
+            <PlaceListing places={selectedState.conurbations} />
+          </div>
+        )}
       </div>
     )
   }

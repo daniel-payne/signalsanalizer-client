@@ -51,12 +51,12 @@ class Application extends Component {
   }
 
   render() {
-    let total //eslint-disable-line no-unused-vars
-    //Hack to ensure all is drawn correctly
-    total += this.props.store.displayedCountries ? this.props.store.displayedCountries.length : 0
-    total += this.props.store.displayedStates ? this.props.store.displayedStates.length : 0
-    total += this.props.store.displayedCounties ? this.props.store.displayedCounties.length : 0
-    total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
+    // let total //eslint-disable-line no-unused-vars
+    // //Hack to ensure all is drawn correctly
+    // total += this.props.store.displayedCountries ? this.props.store.displayedCountries.length : 0
+    // total += this.props.store.displayedStates ? this.props.store.displayedStates.length : 0
+    // total += this.props.store.displayedCounties ? this.props.store.displayedCounties.length : 0
+    // total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
 
     return (
       <div className="Application">
@@ -65,10 +65,11 @@ class Application extends Component {
             <CssBaseline />
 
             <Header
-              selectedCountry={this.props.store.selectedCountry}
-              selectedState={this.props.store.selectedState}
-              selectedCounty={this.props.store.selectedCounty}
-              selectedConurbation={this.props.store.selectedConurbation}
+              // title={this.props.store.displayedCounties.length}
+              selectedCountry={this.props.store.globe.selectedCountry}
+              // selectedState={this.props.store.selectedState}
+              // selectedCounty={this.props.store.selectedCounty}
+              // selectedConurbation={this.props.store.selectedConurbation}
               onOpenLeftDrawer={this.toggleDrawer('left', true)}
               onOpenRightDrawer={this.toggleDrawer('right', true)}
             />
@@ -87,11 +88,12 @@ class Application extends Component {
                   return (
                     <CurrentData
                       className="map-display"
-                      countries={this.props.store.countries}
-                      states={this.props.store.states}
-                      displayedCountries={this.props.store.displayedCountries}
-                      displayedStates={this.props.store.displayedStates}
-                      displayedConurbations={this.props.store.displayedConurbations}
+                      countries={this.props.store.globe.countries}
+                      selectedCountry={this.props.store.globe.selectedCountry}
+                      // displayedCountries={this.props.store.displayedCountries}
+                      // displayedStates={this.props.store.displayedStates}
+                      // displayedCounties={this.props.store.displayedCounties}
+                      // displayedConurbations={this.props.store.displayedConurbations}
                     />
                   )
                 }}
@@ -103,11 +105,13 @@ class Application extends Component {
                   return (
                     <CurrentData
                       className="map-display"
-                      countries={this.props.store.countries}
-                      states={this.props.store.states}
-                      displayedCountries={this.props.store.displayedCountries}
-                      displayedStates={this.props.store.displayedStates}
-                      displayedConurbations={this.props.store.displayedConurbations}
+                      countries={this.props.store.globe.countries}
+                      selectedCountry={this.props.store.globe.selectedCountry}
+                      // states={this.props.store.states}
+                      // displayedCountries={this.props.store.displayedCountries}
+                      // displayedStates={this.props.store.displayedStates}
+                      // displayedCounties={this.props.store.displayedCounties}
+                      // displayedConurbations={this.props.store.displayedConurbations}
                     />
                   )
                 }}
