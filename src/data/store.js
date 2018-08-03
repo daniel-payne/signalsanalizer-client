@@ -103,6 +103,27 @@ const Store = types
         contextConurbation = undefined
       }
 
+      if (
+        !contextConurbation &&
+        self.globe.selectedCountry &&
+        self.globe.selectedCountry.selectedState &&
+        self.globe.selectedCountry.selectedState.selectedConurbation
+      ) {
+        self.globe.selectedCountry.selectedState.deSelect()
+      }
+
+      if (!contextCounty && self.globe.selectedCountry && self.globe.selectedCountry.selectedState && self.globe.selectedCountry.selectedState.selectedCounty) {
+        self.globe.selectedCountry.selectedState.deSelect()
+      }
+
+      if (!contextState && self.globe.selectedCountry && self.globe.selectedCountry.selectedState) {
+        self.globe.selectedCountry.deSelect()
+      }
+
+      if (!contextCountry && self.globe.selectedCountry) {
+        self.globe.deSelect()
+      }
+
       if (contextCountry) {
         yield self.globe.chooseCountry(contextCountry).then(() => {
           self.globe.selectedCountry.loadStates().then(() => {

@@ -67,6 +67,13 @@ const Country = types
         self.selectedState = newState
       }
     }),
+    deSelect: function deSelect() {
+      if (self.selectedState) {
+        self.selectedState.deSelect()
+      }
+
+      self.selectedState = undefined
+    },
   }))
 
 export default Country

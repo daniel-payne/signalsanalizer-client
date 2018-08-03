@@ -36,6 +36,39 @@ class Manager extends Component {
 
 const RouteManager = withRouter(Manager)
 
+const RenderView = (props) => {
+  const { globe, displayReference } = props.store
+  const { countries, selectedCountry } = globe || {}
+  const { states, selectedState } = selectedCountry || {}
+  const { counties, selectedCounty } = selectedState || {}
+  const { conurbations, selectedConurbation } = selectedState || {}
+
+  switch (displayReference) {
+    case 'DATA':
+      return (
+        <CurrentData
+          className="map-display"
+          countries={countries}
+          states={states}
+          selectedStates={states}
+          selectedCounties={counties}
+          selectedConurbations={conurbations}
+        />
+      )
+    default:
+      return (
+        <CurrentData
+          className="map-display"
+          countries={countries}
+          states={states}
+          selectedStates={states}
+          selectedCounties={counties}
+          selectedConurbations={conurbations}
+        />
+      )
+  }
+}
+
 class Application extends Component {
   state = {
     left: false,
@@ -91,16 +124,7 @@ class Application extends Component {
               <Route
                 path="/:display"
                 render={({ match }) => {
-                  return (
-                    <CurrentData
-                      className="map-display"
-                      countries={countries}
-                      states={states}
-                      selectedStates={states}
-                      selectedCounties={counties}
-                      selectedConurbations={conurbations}
-                    />
-                  )
+                  return <RenderView store={this.props.store} />
                 }}
               />
               <Route

@@ -20,14 +20,15 @@ class Header extends Component {
           </IconButton>
           <Typography className="title" variant="title" color="inherit">
             {this.props.title ? this.props.title : 'Signals Analizer'}
-            &nbsp;
+          </Typography>
+          <Typography className="title" variant="subheading" color="inherit">
             {selectedCountry ? selectedCountry.countryName : null}
-            &nbsp;
-            {selectedState ? selectedState.stateName : null}
-            &nbsp;
-            {selectedCounty ? selectedCounty.countyName : null}
-            &nbsp;
-            {selectedConurbation ? selectedConurbation.conurbationName : null}
+
+            {selectedState ? ` - ${selectedState.stateName}` : null}
+
+            {selectedCounty ? ` - ${selectedCounty.countyName}` : null}
+
+            {selectedConurbation ? ` - ${selectedConurbation.conurbationName}` : null}
           </Typography>
           <IconButton className="menuButton-right" color="inherit" aria-label="Menu" onClick={onOpenRightDrawer}>
             <MenuIcon />

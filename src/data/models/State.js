@@ -128,6 +128,10 @@ const State = types
         self.selectedConurbation = newConurbation
       }
     }),
+    deSelect: function deSelect() {
+      self.selectedCounty = undefined
+      self.selectedConurbation = undefined
+    },
   }))
 
 export default State

@@ -48,25 +48,27 @@ const Globe = types
 
       if (country && country.border) {
         self.selectedCountry = country
-      } else {
-        const data = yield getCountry(contextReference)
 
-        if (country) {
-          country.border = data[0].border
-
-          self.selectedCountry = country
-        } else {
-          const newCountry = Country.create(data[0])
-
-          self.countries.push(newCountry)
-
-          self.selectedCountry = newCountry
-        }
-
-        self.selectedCountry.states.forEach((state) => {
-          state.loadConurbations()
-        })
+        return
       }
+
+      const data = yield getCountry(contextReference)
+
+      if (country) {
+        country.border = data[0].border
+
+        self.selectedCountry = country
+      } else {
+        const newCountry = Country.create(data[0])
+
+        self.countries.push(newCountry)
+
+        self.selectedCountry = newCountry
+      }
+
+      self.selectedCountry.states.forEach((state) => {
+        state.loadConurbations()
+      })
     }),
   }))
 
