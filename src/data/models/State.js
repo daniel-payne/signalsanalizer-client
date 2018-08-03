@@ -23,9 +23,16 @@ const State = types
 
     selectedConurbation: types.maybe(types.reference(Conurbation)),
     selectedCounty: types.maybe(types.reference(County)),
+
+    isCountiesLoaded: types.optional(types.boolean, false),
+    isConurbationsLoaded: types.optional(types.boolean, false),
   })
   .actions((self) => ({
     loadCounties: flow(function* loadCounties() {
+      if (self.isCountiesLoaded === true) {
+        return
+      }
+
       const data = yield getCounties(self.contextReference)
 
       const newCounties = data.map((item) => {
@@ -45,6 +52,8 @@ const State = types
           self.counties.push(newCounty)
         }
       })
+
+      self.isCountiesLoaded = true
     }),
     chooseCounty: flow(function* loadState(contextReference) {
       const county = self.counties.find((county) => county.contextReference === contextReference)
@@ -72,6 +81,10 @@ const State = types
       self.selectedConurbation = undefined
     }),
     loadConurbations: flow(function* loadConurbations() {
+      if (self.isConurbationsLoaded === true) {
+        return
+      }
+
       const data = yield getConurbations(self.contextReference)
 
       const newConurbations = data.map((item) => {
@@ -87,6 +100,8 @@ const State = types
           self.conurbations.push(newConurbation)
         }
       })
+
+      self.isConurbationsLoaded = true
     }),
     chooseConurbation: flow(function* loadState(contextReference) {
       const conurbation = self.conurbations.find((conurbation) => conurbation.contextReference === contextReference)

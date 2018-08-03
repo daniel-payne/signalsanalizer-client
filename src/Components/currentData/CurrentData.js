@@ -39,8 +39,6 @@ class CurrentData extends Component {
         return (
           <div key={place.contextReference} onClick={choosePlace(place.contextReference)}>
             {place.countryName || place.stateName || place.countyName || place.conurbationName || place.contextReference}
-            &nbsp;
-            {place.contextReference}
           </div>
         )
       })

@@ -123,52 +123,22 @@ const Store = types
       }
     }),
   }))
+  .views((self) => ({
+    get TIME_PERIODS() {
+      return TIME_PERIODS
+    },
+    get DISPLAY_VIEWS() {
+      return DISPLAY_VIEWS
+    },
+    calculateRoute({ view, period, place }) {
+      const newView = view || self.displayReference
+      const newPeriod = period || self.temporalReference
+      const newPlace = place || self.contextReference
+
+      return `${newView}-${newPeriod}-${newPlace}-`
+    },
+  }))
 
 const store = Store.create({})
-
-store.TIME_PERIODS = TIME_PERIODS
-store.DISPLAY_VIEWS = DISPLAY_VIEWS
-
-store.calculateRoute = function({ view, period, place }) {
-  const newView = view || this.displayReference
-  const newPeriod = period || this.temporalReference
-  const newPlace = place || this.contextReference
-
-  return `${newView}-${newPeriod}-${newPlace}-`
-}.bind(store)
-
-const validateRoute = function(display) {
-  let data = display.toUpperCase()
-
-  let view
-  let period
-  let place
-
-  view = this.DISPLAY_VIEWS.find((item) => data.indexOf(item + '-') > -1)
-  period = this.TIME_PERIODS.find((item) => data.indexOf(item + '-') > -1)
-
-  if (view) {
-    data = data.replace(view, '')
-  }
-  if (period) {
-    data = data.replace(period, '')
-  }
-
-  place = data.replace(/-/g, '')
-
-  this.choosePlace(place)
-
-  if (period) {
-    this.choosePeriod(period)
-  }
-
-  if (view) {
-    this.chooseView(view)
-  }
-
-  console.log('VALIDATING ROUTE >>>>>>>>>>>>>>>>>>>>' + display)
-
-  return view
-}.bind(store)
 
 export default makeInspectable(store)

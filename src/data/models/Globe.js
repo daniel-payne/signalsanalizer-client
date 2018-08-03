@@ -12,9 +12,15 @@ const Globe = types
     countries: types.optional(types.array(Country), []),
 
     selectedCountry: types.maybe(types.reference(Country)),
+
+    isCountriesLoaded: types.optional(types.boolean, false),
   })
   .actions((self) => ({
     loadCountries: flow(function* loadCountries() {
+      if (self.isCountriesLoaded === true) {
+        return
+      }
+
       const data = yield getCountries()
 
       const newCountries = data.map((item) => {
@@ -34,6 +40,8 @@ const Globe = types
           self.countries.push(newCountry)
         }
       })
+
+      self.isCountriesLoaded = true
     }),
     chooseCountry: flow(function* loadCountry(contextReference) {
       const country = self.countries.find((country) => country.contextReference === contextReference)
@@ -54,6 +62,10 @@ const Globe = types
 
           self.selectedCountry = newCountry
         }
+
+        self.selectedCountry.states.forEach((state) => {
+          state.loadConurbations()
+        })
       }
     }),
   }))

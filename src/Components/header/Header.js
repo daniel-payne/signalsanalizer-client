@@ -21,13 +21,13 @@ class Header extends Component {
           <Typography className="title" variant="title" color="inherit">
             {this.props.title ? this.props.title : 'Signals Analizer'}
             &nbsp;
-            {selectedCountry ? selectedCountry.countryName : 'x'}
+            {selectedCountry ? selectedCountry.countryName : null}
             &nbsp;
-            {selectedState ? selectedState.stateName : 'x'}
+            {selectedState ? selectedState.stateName : null}
             &nbsp;
-            {selectedCounty ? selectedCounty.countyName : 'x'}
+            {selectedCounty ? selectedCounty.countyName : null}
             &nbsp;
-            {selectedConurbation ? selectedConurbation.conurbationName : 'x'}
+            {selectedConurbation ? selectedConurbation.conurbationName : null}
           </Typography>
           <IconButton className="menuButton-right" color="inherit" aria-label="Menu" onClick={onOpenRightDrawer}>
             <MenuIcon />

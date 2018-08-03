@@ -17,9 +17,15 @@ const Country = types
     states: types.optional(types.array(State), []),
 
     selectedState: types.maybe(types.reference(State)),
+
+    isStatesLoaded: types.optional(types.boolean, false),
   })
   .actions((self) => ({
     loadStates: flow(function* loadStates() {
+      if (self.isStatesLoaded === true) {
+        return
+      }
+
       const data = yield getStates(self.contextReference)
 
       const newStates = data.map((item) => {
@@ -35,6 +41,8 @@ const Country = types
           self.states.push(newState)
         }
       })
+
+      self.isStatesLoaded = true
     }),
     chooseState: flow(function* loadState(contextReference) {
       const state = self.states.find((state) => state.contextReference === contextReference)
