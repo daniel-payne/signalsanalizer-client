@@ -58,6 +58,8 @@ const State = types
     chooseCounty: flow(function* loadState(contextReference) {
       const county = self.counties.find((county) => county.contextReference === contextReference)
 
+      self.selectedConurbation = undefined
+
       if (county && county.border) {
         self.selectedCounty = county
 
@@ -77,8 +79,6 @@ const State = types
 
         self.selectedCounty = newCounty
       }
-
-      self.selectedConurbation = undefined
     }),
     loadConurbations: flow(function* loadConurbations() {
       if (self.isConurbationsLoaded === true) {
@@ -106,6 +106,8 @@ const State = types
     chooseConurbation: flow(function* loadState(contextReference) {
       const conurbation = self.conurbations.find((conurbation) => conurbation.contextReference === contextReference)
 
+      self.selectedCounty = undefined
+
       if (conurbation && conurbation.border) {
         self.selectedConurbation = conurbation
 
@@ -125,8 +127,6 @@ const State = types
 
         self.selectedConurbation = newConurbation
       }
-
-      self.selectedCounty = undefined
     }),
   }))
 

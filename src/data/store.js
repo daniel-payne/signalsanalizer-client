@@ -93,12 +93,14 @@ const Store = types
 
       const contextCountry = extractContextCountry(data)
       const contextState = extractContextState(data)
-      const contextConurbation = extractContextConurbation(data)
 
+      let contextConurbation = extractContextConurbation(data)
       let contextCounty = extractContextCounty(data)
 
       if (contextConurbation) {
         contextCounty = undefined
+      } else if (contextCounty) {
+        contextConurbation = undefined
       }
 
       if (contextCountry) {
