@@ -35,7 +35,7 @@ const Globe = types
         }
       })
     }),
-    loadCountry: flow(function* loadCountry(contextReference) {
+    chooseCountry: flow(function* loadCountry(contextReference) {
       const country = self.countries.find((country) => country.contextReference === contextReference)
 
       if (country && country.border) {

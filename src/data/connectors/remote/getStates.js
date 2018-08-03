@@ -3,7 +3,7 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getStates(contextReference, useCache = true) {
+function getStates(contextReference, useCache = false) {
   console.log('LOADING STATES ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`states:${contextReference}`)
@@ -45,7 +45,7 @@ function getStates(contextReference, useCache = true) {
       })
     })
     .then((data) => {
-      if (window.localStorage && data) {
+      if (useCache === true && window.localStorage && data) {
         window.localStorage.setItem(`states:${contextReference}`, JSON.stringify(data))
       }
       console.log('LOADED STATES ------------------------ FROM SERVER ' + data.length)

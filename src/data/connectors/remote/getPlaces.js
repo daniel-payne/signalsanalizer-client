@@ -2,7 +2,7 @@ import rewind from 'geojson-rewind'
 
 import { fixDateline } from '../../common'
 
-function getPlaces(contextReference, useCache = true) {
+function getPlaces(contextReference, useCache = false) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`places:${contextReference}`)
 
@@ -11,11 +11,7 @@ function getPlaces(contextReference, useCache = true) {
     }
   }
 
-  return fetch(
-    `${
-      process.env.REACT_APP_REST_ENDPOINT
-    }/geographic/places?contextReference=${contextReference}`
-  )
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/places?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
         console.log('ERROR /geographic/places: ' + response.status)
@@ -46,11 +42,8 @@ function getPlaces(contextReference, useCache = true) {
       })
     })
     .then((data) => {
-      if (window.localStorage && data) {
-        window.localStorage.setItem(
-          `places:${contextReference}`,
-          JSON.stringify(data)
-        )
+      if (useCache === true && window.localStorage && data) {
+        window.localStorage.setItem(`places:${contextReference}`, JSON.stringify(data))
       }
 
       return data

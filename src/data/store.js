@@ -7,23 +7,7 @@ import State from './models/State'
 import Conurbation from './models/Conurbation'
 import County from './models/County'
 
-import getGlobe from './connectors/remote/getGlobe'
-import getCountries from './connectors/remote/getCountries'
-
-import getCountry from './connectors/remote/getCountry'
-import getStates from './connectors/remote/getStates'
-import getState from './connectors/remote/getState'
-import getCounties from './connectors/remote/getCounties'
-import getConurbations from './connectors/remote/getConurbations'
-
 import { extractContextCountry, extractContextState, extractContextConurbation, extractContextCounty } from './common'
-
-// import getState from './connectors/remote/getState'
-// import getCounties from './connectors/remote/getCounties'
-
-// import getCounty from './connectors/remote/getCounty'
-// import getPlaces from './connectors/remote/getPlaces'
-// import getEvents from './connectors/remote/getEvents'
 
 export const DAY = 'DAY'
 export const WEEK = 'WEEK'
@@ -110,13 +94,33 @@ const Store = types
       const contextCountry = extractContextCountry(data)
       const contextState = extractContextState(data)
       const contextConurbation = extractContextConurbation(data)
-      const contextCounty = extractContextCounty(data)
 
-      yield self.globe.loadCountry(contextCountry).then(() => {
-        self.globe.selectedCountry.loadStates(contextCountry)
-      })
+      let contextCounty = extractContextCounty(data)
 
-      console.log([contextCountry, contextState, contextConurbation, contextCounty])
+      if (contextConurbation) {
+        contextCounty = undefined
+      }
+
+      if (contextCountry) {
+        yield self.globe.chooseCountry(contextCountry).then(() => {
+          self.globe.selectedCountry.loadStates().then(() => {
+            if (contextState) {
+              self.globe.selectedCountry.chooseState(contextState).then(() => {
+                self.globe.selectedCountry.selectedState.loadCounties().then(() => {
+                  if (contextCounty) {
+                    self.globe.selectedCountry.selectedState.chooseCounty(contextCounty)
+                  }
+                })
+                self.globe.selectedCountry.selectedState.loadConurbations().then(() => {
+                  if (contextConurbation) {
+                    self.globe.selectedCountry.selectedState.chooseConurbation(contextConurbation)
+                  }
+                })
+              })
+            }
+          })
+        })
+      }
     }),
   }))
 

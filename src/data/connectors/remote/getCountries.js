@@ -3,7 +3,7 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getCountries(useCache = true) {
+function getCountries(useCache = false) {
   console.log('LOADING COUNTRIES ------------------------')
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`countries`)

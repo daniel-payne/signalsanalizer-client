@@ -77,18 +77,16 @@ export const extractContextType = function(contextReference) {
 
 export const extractContextPart = function(contextReference, level) {
   const conurbationStartPosition = contextReference.indexOf('@')
-  const parts = contextReference.split('.')
+  const parts = contextReference.split('.').filter((item) => item.length > 0)
 
   if (level === COUNTRY) {
     return contextReference.substr(0, 3)
-  } else if (level === COUNTY && conurbationStartPosition === -1) {
+  } else if (level === CONURBATION && conurbationStartPosition > -1) {
     return contextReference
-  } else if (level === COUNTY && conurbationStartPosition > -1) {
-    return contextReference.substr(0, conurbationStartPosition)
   } else if (level === STATE && parts.length > 1) {
     return parts[0] + '.' + parts[1] + '.'
-  } else if (level === CONURBATION && conurbationStartPosition > -1) {
-    return contextReference.substr(conurbationStartPosition)
+  } else if (level === COUNTY && parts.length > 2) {
+    return parts[0] + '.' + parts[1] + '.' + parts[2] + '.'
   }
 }
 

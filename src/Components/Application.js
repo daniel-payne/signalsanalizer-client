@@ -58,6 +58,12 @@ class Application extends Component {
     // total += this.props.store.displayedCounties ? this.props.store.displayedCounties.length : 0
     // total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
 
+    const { globe } = this.props.store
+    const { countries, selectedCountry } = globe || {}
+    const { states, selectedState } = selectedCountry || {}
+    const { counties, selectedCounty } = selectedState || {}
+    const { conurbations, selectedConurbation } = selectedState || {}
+
     return (
       <div className="Application">
         <Router>
@@ -66,10 +72,10 @@ class Application extends Component {
 
             <Header
               // title={this.props.store.displayedCounties.length}
-              selectedCountry={this.props.store.globe.selectedCountry}
-              // selectedState={this.props.store.selectedState}
-              // selectedCounty={this.props.store.selectedCounty}
-              // selectedConurbation={this.props.store.selectedConurbation}
+              selectedCountry={selectedCountry}
+              selectedState={selectedState}
+              selectedCounty={selectedCounty}
+              selectedConurbation={selectedConurbation}
               onOpenLeftDrawer={this.toggleDrawer('left', true)}
               onOpenRightDrawer={this.toggleDrawer('right', true)}
             />
@@ -88,12 +94,11 @@ class Application extends Component {
                   return (
                     <CurrentData
                       className="map-display"
-                      countries={this.props.store.globe.countries}
-                      selectedCountry={this.props.store.globe.selectedCountry}
-                      // displayedCountries={this.props.store.displayedCountries}
-                      // displayedStates={this.props.store.displayedStates}
-                      // displayedCounties={this.props.store.displayedCounties}
-                      // displayedConurbations={this.props.store.displayedConurbations}
+                      countries={countries}
+                      states={states}
+                      selectedStates={states}
+                      selectedCounties={counties}
+                      selectedConurbations={conurbations}
                     />
                   )
                 }}

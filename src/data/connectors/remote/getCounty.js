@@ -4,16 +4,16 @@ import wkt from 'terraformer-wkt-parser'
 import { fixDateline } from '../../common'
 
 function getCounties(contextReference, useCache = false) {
-  console.log('LOADING COUNTIES ------------------------ FOR ' + contextReference)
+  console.log('LOADING COUNTY ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
-    const result = window.localStorage.getItem(`counties:${contextReference}`)
-    console.log('LOADED COUNTIES ------------------------ FROM CACHE')
+    const result = window.localStorage.getItem(`county:${contextReference}`)
+    console.log('LOADED COUNTY ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
   }
 
-  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/counties?contextReference=${contextReference}`)
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/county?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
         console.log('ERROR /geographic/counties: ' + response.status)
@@ -24,7 +24,7 @@ function getCounties(contextReference, useCache = false) {
     })
     .then((data) => {
       return data.map((county) => {
-        const geoJson = wkt.parse(county.outlineWKT)
+        const geoJson = wkt.parse(county.borderWKT)
 
         const geoJSONDateline = fixDateline(geoJson)
 
@@ -34,7 +34,7 @@ function getCounties(contextReference, useCache = false) {
           countyName: county.countyName,
           contextReference: county.contextReference,
 
-          outline: JSON.stringify({
+          border: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,
@@ -48,7 +48,7 @@ function getCounties(contextReference, useCache = false) {
       if (useCache === true && window.localStorage && data) {
         window.localStorage.setItem(`counties:${contextReference}`, JSON.stringify(data))
       }
-      console.log('LOADED COUNTIES ------------------------ FROM SERVER ' + data.length)
+      console.log('LOADED COUNTY ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }

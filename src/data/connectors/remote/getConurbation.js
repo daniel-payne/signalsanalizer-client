@@ -3,20 +3,20 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getConurbations(contextReference, useCache = false) {
-  console.log('LOADING CONURBATIONS ------------------------ FOR ' + contextReference)
+function getConurbation(contextReference, useCache = false) {
+  console.log('LOADING CONURBATION ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
-    const result = window.localStorage.getItem(`conurbations:${contextReference}`)
-    console.log('LOADED CONURBATIONS ------------------------ FROM CACHE')
+    const result = window.localStorage.getItem(`conurbation:${contextReference}`)
+    console.log('LOADED CONURBATION ------------------------ FROM CACHE')
     if (result) {
       return Promise.resolve(JSON.parse(result))
     }
   }
 
-  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/conurbations?contextReference=${contextReference}`)
+  return fetch(`${process.env.REACT_APP_REST_ENDPOINT}/geographic/conurbation?contextReference=${contextReference}`)
     .then((response) => {
       if (response.status !== 200) {
-        console.log('ERROR /geographic/conurbations: ' + response.status)
+        console.log('ERROR /geographic/conurbation: ' + response.status)
         return
       }
 
@@ -24,7 +24,7 @@ function getConurbations(contextReference, useCache = false) {
     })
     .then((data) => {
       return data.map((conurbation) => {
-        const geoJson = wkt.parse(conurbation.outlineWKT)
+        const geoJson = wkt.parse(conurbation.borderWKT)
 
         const geoJSONDateline = fixDateline(geoJson)
 
@@ -46,11 +46,11 @@ function getConurbations(contextReference, useCache = false) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`conurbations:${contextReference}`, JSON.stringify(data))
+        window.localStorage.setItem(`counties:${contextReference}`, JSON.stringify(data))
       }
-      console.log('LOADED CONURBATIONS ------------------------ FROM SERVER ' + data.length)
+      console.log('LOADED CONURBATION ------------------------ FROM SERVER ' + data.length)
       return data
     })
 }
 
-export default getConurbations
+export default getConurbation

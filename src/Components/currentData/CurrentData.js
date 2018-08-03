@@ -39,6 +39,8 @@ class CurrentData extends Component {
         return (
           <div key={place.contextReference} onClick={choosePlace(place.contextReference)}>
             {place.countryName || place.stateName || place.countyName || place.conurbationName || place.contextReference}
+            &nbsp;
+            {place.contextReference}
           </div>
         )
       })
@@ -47,8 +49,7 @@ class CurrentData extends Component {
 
   render() {
     const { PlaceListing } = this
-    const { countries, selectedCountry } = this.props
-    const { selectedState } = selectedCountry || {}
+    const { countries, selectedStates, selectedCounties, selectedConurbations } = this.props
 
     return (
       <div className="CurrentData">
@@ -57,24 +58,24 @@ class CurrentData extends Component {
           <PlaceListing places={countries} />
         </div>
 
-        {selectedCountry && (
+        {selectedStates && (
           <div className="data-list">
             <h4>States</h4>
-            <PlaceListing places={selectedCountry.states} />
+            <PlaceListing places={selectedStates} />
           </div>
         )}
 
-        {selectedState && (
+        {selectedCounties && (
           <div className="data-list">
             <h4>Counties</h4>
-            <PlaceListing places={selectedState.counties} />
+            <PlaceListing places={selectedCounties} />
           </div>
         )}
 
-        {selectedState && (
+        {selectedConurbations && (
           <div className="data-list">
             <h4>Conurbations</h4>
-            <PlaceListing places={selectedState.conurbations} />
+            <PlaceListing places={selectedConurbations} />
           </div>
         )}
       </div>
