@@ -70,6 +70,13 @@ const Globe = types
         state.loadConurbations()
       })
     }),
+    deSelect: function deSelect() {
+      if (self.selectedCountry) {
+        self.selectedCountry.deSelect()
+      }
+
+      self.selectedCountry = undefined
+    },
   }))
 
 export default Globe

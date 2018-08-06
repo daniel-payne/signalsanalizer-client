@@ -7,6 +7,8 @@ import State from './models/State'
 import Conurbation from './models/Conurbation'
 import County from './models/County'
 
+import getGlobe from './connectors/remote/getGlobe'
+
 import { extractContextCountry, extractContextState, extractContextConurbation, extractContextCounty } from './common'
 
 export const DAY = 'DAY'
@@ -20,13 +22,14 @@ export const SINCE_1970 = 'SINCE_1970'
 
 export const TIME_PERIODS = [DAY, WEEK, MONTH, YEAR, YEARS_5, YEARS_10, YEARS_25, SINCE_1970]
 
+export const DATA = 'DATA'
 export const GLOBE = 'GLOBE'
 export const MAP = 'MAP'
 export const COUNTRY = 'COUNTRY'
 export const STATE = 'STATE'
 export const CONURBATION = 'CONURBATION'
 
-export const DISPLAY_VIEWS = [GLOBE, MAP, COUNTRY, STATE, CONURBATION]
+export const DISPLAY_VIEWS = [DATA, GLOBE, MAP, COUNTRY, STATE, CONURBATION]
 
 const Store = types
   .model({
@@ -39,7 +42,7 @@ const Store = types
 
     contextReference: types.optional(types.string, ''),
     temporalReference: types.optional(types.string, MONTH),
-    displayReference: types.optional(types.string, 'GLOBE'),
+    displayReference: types.optional(types.string, 'DATA'),
   })
   .actions((self) => ({
     loadGlobe: flow(function* loadGlobe() {
@@ -47,9 +50,9 @@ const Store = types
         return
       }
 
-      //const data = yield getGlobe()
+      const data = yield getGlobe()
 
-      self.globe = Globe.create({})
+      self.globe = Globe.create(data[0])
 
       yield self.globe.loadCountries()
     }),
@@ -62,8 +65,8 @@ const Store = types
       let period
       let place
 
-      view = self.DISPLAY_VIEWS.find((item) => data.indexOf(item + '-') > -1)
-      period = self.TIME_PERIODS.find((item) => data.indexOf(item + '-') > -1)
+      view = self.DISPLAY_VIEWS.find((item) => data.indexOf(item + '-') > -1) || DATA
+      period = self.TIME_PERIODS.find((item) => data.indexOf(item + '-') > -1) || WEEK
 
       if (view) {
         data = data.replace(view, '')
@@ -77,11 +80,11 @@ const Store = types
       yield self.choosePlace(place)
 
       if (period) {
-        //yield self.choosePeriod(period)
+        yield self.choosePeriod(period)
       }
 
       if (view) {
-        //self.chooseView(view)
+        self.chooseView(view)
       }
 
       console.log('VALIDATING ROUTE >>>>>>>>>>>>>>>>>>>>' + route)
@@ -144,6 +147,14 @@ const Store = types
           })
         })
       }
+
+      self.contextReference = contextReference
+    }),
+    choosePeriod: flow(function* validateRoute(temporalReference) {
+      self.temporalReference = self.TIME_PERIODS.find((item) => item === temporalReference) || WEEK
+    }),
+    chooseView: flow(function* validateRoute(displayReference) {
+      self.displayReference = self.DISPLAY_VIEWS.find((item) => item === displayReference) || WEEK
     }),
   }))
   .views((self) => ({

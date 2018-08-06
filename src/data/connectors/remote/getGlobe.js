@@ -23,20 +23,14 @@ function getGlobe(contextReference, useCache = false) {
       return response.json()
     })
     .then((data) => {
-      return data.map((country) => {
-        const geoJson = wkt.parse(country.outlineWKT)
+      return data.map((globe) => {
+        const geoJson = wkt.parse(globe.outlineWKT)
 
         let geoJSONDateline = geoJson
 
         geoJSONDateline = fixDateline(geoJson)
 
         const geoJsonRewound = rewind(geoJSONDateline, true)
-
-        let geoJsonCenterpoint
-
-        if (country.centerpointWKT) {
-          geoJsonCenterpoint = wkt.parse(country.centerpointWKT)
-        }
 
         return {
           outline: JSON.stringify({
