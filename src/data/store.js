@@ -7,7 +7,7 @@ import State from './models/State'
 import Conurbation from './models/Conurbation'
 import County from './models/County'
 
-import getGlobe from './connectors/remote/getGlobe'
+// import getGlobe from './connectors/remote/getGlobe'
 
 import { extractContextCountry, extractContextState, extractContextConurbation, extractContextCounty } from './common'
 
@@ -50,7 +50,7 @@ const Store = types
         return
       }
 
-      const data = yield getGlobe()
+      //const data = yield getGlobe()
 
       self.globe = Globe.create({})
 

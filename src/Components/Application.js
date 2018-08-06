@@ -98,9 +98,13 @@ class Application extends Component {
     // total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
 
     const { globe } = this.props.store
+    // eslint-disable-next-line no-unused-vars
     const { countries, selectedCountry } = globe || {}
+    // eslint-disable-next-line no-unused-vars
     const { states, selectedState } = selectedCountry || {}
+    // eslint-disable-next-line no-unused-vars
     const { counties, selectedCounty } = selectedState || {}
+    // eslint-disable-next-line no-unused-vars
     const { conurbations, selectedConurbation } = selectedState || {}
 
     return (
@@ -110,7 +114,7 @@ class Application extends Component {
             <CssBaseline />
 
             <Header
-              title={this.props.containerHeight}
+              // title={this.props.containerHeight}
               selectedCountry={selectedCountry}
               selectedState={selectedState}
               selectedCounty={selectedCounty}
