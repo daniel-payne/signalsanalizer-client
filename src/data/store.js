@@ -41,8 +41,8 @@ const Store = types
     selectedConurbation: types.maybe(types.reference(Conurbation)),
 
     contextReference: types.optional(types.string, ''),
-    temporalReference: types.optional(types.string, MONTH),
-    displayReference: types.optional(types.string, 'DATA'),
+    temporalReference: types.optional(types.string, WEEK),
+    displayReference: types.optional(types.string, GLOBE),
   })
   .actions((self) => ({
     loadGlobe: flow(function* loadGlobe() {
@@ -52,7 +52,7 @@ const Store = types
 
       const data = yield getGlobe()
 
-      self.globe = Globe.create(data[0])
+      self.globe = Globe.create({})
 
       yield self.globe.loadCountries()
     }),
@@ -80,7 +80,7 @@ const Store = types
       yield self.choosePlace(place)
 
       if (period) {
-        yield self.choosePeriod(period)
+        self.choosePeriod(period)
       }
 
       if (view) {
@@ -91,7 +91,7 @@ const Store = types
 
       return view
     }),
-    choosePlace: flow(function* validateRoute(contextReference) {
+    choosePlace: flow(function* choosePlace(contextReference) {
       let data = contextReference.toUpperCase()
 
       const contextCountry = extractContextCountry(data)
@@ -150,12 +150,14 @@ const Store = types
 
       self.contextReference = contextReference
     }),
-    choosePeriod: flow(function* validateRoute(temporalReference) {
+  }))
+  .actions((self) => ({
+    choosePeriod: (temporalReference) => {
       self.temporalReference = self.TIME_PERIODS.find((item) => item === temporalReference) || WEEK
-    }),
-    chooseView: flow(function* validateRoute(displayReference) {
+    },
+    chooseView: (displayReference) => {
       self.displayReference = self.DISPLAY_VIEWS.find((item) => item === displayReference) || WEEK
-    }),
+    },
   }))
   .views((self) => ({
     get TIME_PERIODS() {

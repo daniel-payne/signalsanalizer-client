@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import renderMap, { buildMap } from './map.d3'
+import renderMap, { buildMap } from './MapDisplay.d3'
 
-import './Map.css'
+import './MapDisplay.css'
 
-class Map extends Component {
+class MapDisplay extends Component {
   constructor(props) {
     super(props)
 
@@ -48,13 +48,7 @@ class Map extends Component {
 
   render() {
     return (
-      <svg
-        className="Map"
-        id="map-display"
-        ref={this.mapTarget}
-        width={this.props.displayWidth}
-        height={this.props.displayHeight - 120}
-      >
+      <svg className="Map" id="map-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight - 120}>
         <g id="map-display-zoom">
           <g id="map-display-countries" />
           <g id="map-display-states" />
@@ -76,4 +70,4 @@ class Map extends Component {
   }
 }
 
-export default Map
+export default MapDisplay

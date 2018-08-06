@@ -5,12 +5,8 @@ const orthographicProjection = d3.geoOrthographic().center([0, 20])
 const equirectangularProjection = d3.geoEquirectangular().center([0, 0])
 
 const mercatorPathConverter = d3.geoPath().projection(mercatorProjection)
-const orthographicPathConverter = d3
-  .geoPath()
-  .projection(orthographicProjection)
-const equirectangularPathConverter = d3
-  .geoPath()
-  .projection(equirectangularProjection)
+const orthographicPathConverter = d3.geoPath().projection(orthographicProjection)
+const equirectangularPathConverter = d3.geoPath().projection(equirectangularProjection)
 
 export const MERCATOR = 'MERCATOR'
 export const ORTHOGRAPHIC = 'ORTHOGRAPHIC'
@@ -63,15 +59,10 @@ function zoomInto(d) {
   const dy = bounds[1][1] - bounds[0][1]
   const x = (bounds[0][0] + bounds[1][0]) / 2
   const y = (bounds[0][1] + bounds[1][1]) / 2
-  const scale = Math.max(
-    1,
-    Math.min(8, 0.9 / Math.max(dx / width, dy / height))
-  )
+  const scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height)))
   const translate = [width / 2 - scale * x, height / 2 - scale * y]
 
-  var transform = d3.zoomIdentity
-    .translate(translate[0], translate[1])
-    .scale(scale)
+  var transform = d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
 
   mapDisplay.call(zoomManager.transform, transform)
 }
@@ -81,7 +72,7 @@ const renderMap = ({
   onSelection,
   countries,
 
-  projectionType = MERCATOR,
+  projectionType = ORTHOGRAPHIC,
 }) => {
   const svg = d3.select(targetSVG)
   const countriesGrouping = svg.select('g#map-display-countries')
@@ -115,9 +106,7 @@ const renderMap = ({
       pathConverter = mercatorPathConverter
   }
 
-  const countriesSelection = countriesGrouping
-    .selectAll('path')
-    .data(countryOutlineData, (d) => d.properties.contextReference)
+  const countriesSelection = countriesGrouping.selectAll('path').data(countryOutlineData, (d) => d.properties.contextReference)
 
   countriesSelection
     .enter()

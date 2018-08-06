@@ -9,9 +9,9 @@ import { observer, inject } from 'mobx-react'
 // import IconButton from '@material-ui/core/IconButton'
 // import MenuIcon from '@material-ui/icons/Menu'
 
-import './CurrentData.css'
+import './DataDisplay.css'
 
-class CurrentData extends Component {
+class DataDisplay extends Component {
   static propTypes = {
     countries: PropTypes.array,
     events: PropTypes.array,
@@ -50,7 +50,7 @@ class CurrentData extends Component {
     const { countries, selectedStates, selectedCounties, selectedConurbations } = this.props
 
     return (
-      <div className="CurrentData">
+      <div className="DataDisplay">
         <div className="data-list">
           <h4>Countries</h4>
           <PlaceListing places={countries} />
@@ -81,4 +81,4 @@ class CurrentData extends Component {
   }
 }
 
-export default observer(withRouter(CurrentData))
+export default observer(withRouter(DataDisplay))

@@ -40,21 +40,10 @@ class Footer extends Component {
     const { value } = this.state
 
     return (
-      <BottomNavigation
-        className="Footer"
-        value={value}
-        onChange={this.handleChange}
-        showLabels
-      >
+      <BottomNavigation className="Footer" value={value} onChange={this.handleChange} showLabels>
         <BottomNavigationAction label="Since 1970" icon={<TerrorismIcon />} />
-        <BottomNavigationAction
-          label="Last 25 Years"
-          icon={<TerrorismIcon />}
-        />
-        <BottomNavigationAction
-          label="Last 10 Years"
-          icon={<TerrorismIcon />}
-        />
+        <BottomNavigationAction label="Last 25 Years" icon={<TerrorismIcon />} />
+        <BottomNavigationAction label="Last 10 Years" icon={<TerrorismIcon />} />
         <BottomNavigationAction label="Last 5 Years" icon={<TerrorismIcon />} />
 
         <BottomNavigationAction label="This Year" icon={<TerrorismIcon />} />

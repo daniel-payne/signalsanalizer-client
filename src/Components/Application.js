@@ -9,8 +9,9 @@ import Drawer from '@material-ui/core/Drawer'
 
 import Header from './header/Header'
 import Footer from './footer/Footer'
-// import Map from './map/Map'
-import CurrentData from './currentData/CurrentData'
+
+import MapDisplay from './mapDisplay/MapDisplay'
+import DataDisplay from './dataDisplay/DataDisplay'
 
 import './Application.css'
 
@@ -37,16 +38,19 @@ class Manager extends Component {
 const RouteManager = withRouter(Manager)
 
 const RenderView = (props) => {
-  const { globe, displayReference } = props.store
+  const { store, containerWidth, containerHeight } = props
+  const { globe, displayReference } = store
   const { countries, selectedCountry } = globe || {}
   const { states, selectedState } = selectedCountry || {}
+  // eslint-disable-next-line no-unused-vars
   const { counties, selectedCounty } = selectedState || {}
+  // eslint-disable-next-line no-unused-vars
   const { conurbations, selectedConurbation } = selectedState || {}
 
   switch (displayReference) {
     case 'DATA':
       return (
-        <CurrentData
+        <DataDisplay
           className="map-display"
           countries={countries}
           states={states}
@@ -55,9 +59,11 @@ const RenderView = (props) => {
           selectedConurbations={conurbations}
         />
       )
+    case 'GLOBE':
+      return <MapDisplay className="map-display" countries={countries} displayWidth={containerWidth} displayHeight={containerHeight} />
     default:
       return (
-        <CurrentData
+        <DataDisplay
           className="map-display"
           countries={countries}
           states={states}
@@ -104,7 +110,7 @@ class Application extends Component {
             <CssBaseline />
 
             <Header
-              // title={this.props.store.displayedCounties.length}
+              title={this.props.containerHeight}
               selectedCountry={selectedCountry}
               selectedState={selectedState}
               selectedCounty={selectedCounty}
@@ -113,36 +119,18 @@ class Application extends Component {
               onOpenRightDrawer={this.toggleDrawer('right', true)}
             />
 
-            {/* <Map
-              className="map-display"
-              countries={this.props.store.countries || []}
-              displayWidth={this.props.containerWidth}
-              displayHeight={this.props.containerHeight}
-              onLoadCountry={this.handleLoadCountry}
-            /> */}
             <Switch>
               <Route
                 path="/:display"
-                render={({ match }) => {
-                  return <RenderView store={this.props.store} />
+                render={() => {
+                  return <RenderView store={this.props.store} containerWidth={this.props.containerWidth} containerHeight={this.props.containerHeight} />
                 }}
               />
               <Route
                 path="/"
                 exact={false}
-                render={({ match }) => {
-                  return (
-                    <CurrentData
-                      className="map-display"
-                      countries={this.props.store.globe.countries}
-                      selectedCountry={this.props.store.globe.selectedCountry}
-                      // states={this.props.store.states}
-                      // displayedCountries={this.props.store.displayedCountries}
-                      // displayedStates={this.props.store.displayedStates}
-                      // displayedCounties={this.props.store.displayedCounties}
-                      // displayedConurbations={this.props.store.displayedConurbations}
-                    />
-                  )
+                render={() => {
+                  return <RenderView store={this.props.store} containerWidth={this.props.containerWidth} containerHeight={this.props.containerHeight} />
                 }}
               />
             </Switch>
