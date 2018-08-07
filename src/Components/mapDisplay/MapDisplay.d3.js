@@ -72,7 +72,7 @@ const renderMap = ({
   onSelection,
   countries,
 
-  projectionType = ORTHOGRAPHIC,
+  projectionType = MERCATOR,
 }) => {
   const svg = d3.select(targetSVG)
   const countriesGrouping = svg.select('g#map-display-countries')

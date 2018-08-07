@@ -1,8 +1,8 @@
-.Map {
+.MapDisplay {
   background-color: lightsteelblue;
 }
 
-.Map .countryx {
+.MapDisplay .countryx {
   fill: white;
   /* stroke: gainsboro;
   stroke-width: 1; */
@@ -10,7 +10,7 @@
   /* vector-effect: non-scaling-stroke; */
 }
 
-.Map .country--selectedx {
+.MapDisplay .country--selectedx {
   /* fill: red; */
   stroke: gainsboro;
   stroke-width: 1;

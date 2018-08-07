@@ -55,6 +55,8 @@ const Store = types
       self.globe = Globe.create({})
 
       yield self.globe.loadCountries()
+
+      self.globe.loadCurrentMarkers()
     }),
   }))
   .actions((self) => ({

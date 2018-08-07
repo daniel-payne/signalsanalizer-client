@@ -2,7 +2,7 @@ import rewind from 'geojson-rewind'
 
 import { fixDateline } from '../../common'
 
-function getPlaces(contextReference, useCache = false) {
+function getPlaces(contextReference, useCache = true) {
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`places:${contextReference}`)
 

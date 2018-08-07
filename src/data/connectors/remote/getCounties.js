@@ -3,7 +3,7 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getCounties(contextReference, useCache = false) {
+function getCounties(contextReference, useCache = true) {
   console.log('LOADING COUNTIES ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`counties:${contextReference}`)

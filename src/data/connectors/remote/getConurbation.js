@@ -3,7 +3,7 @@ import wkt from 'terraformer-wkt-parser'
 
 import { fixDateline } from '../../common'
 
-function getConurbation(contextReference, useCache = false) {
+function getConurbation(contextReference, useCache = true) {
   console.log('LOADING CONURBATION ------------------------ FOR ' + contextReference)
   if (useCache === true && window.localStorage) {
     const result = window.localStorage.getItem(`conurbation:${contextReference}`)

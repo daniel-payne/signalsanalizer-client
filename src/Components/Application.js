@@ -10,6 +10,7 @@ import Drawer from '@material-ui/core/Drawer'
 import Header from './header/Header'
 import Footer from './footer/Footer'
 
+import GlobeDisplay from './globeDisplay/GlobeDisplay'
 import MapDisplay from './mapDisplay/MapDisplay'
 import DataDisplay from './dataDisplay/DataDisplay'
 
@@ -40,7 +41,7 @@ const RouteManager = withRouter(Manager)
 const RenderView = (props) => {
   const { store, containerWidth, containerHeight } = props
   const { globe, displayReference } = store
-  const { countries, selectedCountry } = globe || {}
+  const { countries, markers, selectedCountry } = globe || {}
   const { states, selectedState } = selectedCountry || {}
   // eslint-disable-next-line no-unused-vars
   const { counties, selectedCounty } = selectedState || {}
@@ -60,7 +61,9 @@ const RenderView = (props) => {
         />
       )
     case 'GLOBE':
-      return <MapDisplay className="map-display" countries={countries} displayWidth={containerWidth} displayHeight={containerHeight} />
+      return <GlobeDisplay className="map-display" countries={countries} markers={markers} displayWidth={containerWidth} displayHeight={containerHeight} />
+    case 'MAP':
+      return <MapDisplay className="map-display" countries={countries} markers={markers} displayWidth={containerWidth} displayHeight={containerHeight} />
     default:
       return (
         <DataDisplay

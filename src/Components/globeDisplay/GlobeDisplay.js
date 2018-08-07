@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import renderMap, { buildMap } from './MapDisplay.d3'
+import renderMap, { buildMap } from './GlobeDisplay.d3'
 
-import './MapDisplay.css'
+import './GlobeDisplay.css'
 
-class MapDisplay extends Component {
+class GlobeDisplay extends Component {
   constructor(props) {
     super(props)
 
@@ -16,39 +16,32 @@ class MapDisplay extends Component {
     displayWidth: PropTypes.number,
     displayHeight: PropTypes.number,
     countries: PropTypes.array,
+    markers: PropTypes.array,
     selectedCountry: PropTypes.object,
 
     onLoadCountry: PropTypes.func,
   }
 
-  state = {
-    selectedCountry: undefined,
-  }
+  state = {}
 
   componentDidMount() {
     buildMap(this.mapTarget.current)
   }
 
   componentDidUpdate() {
-    const { countries, selectedCountry } = this.props
+    const { countries, markers, selectedCountry } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
 
-    renderMap({ targetSVG, onSelection, countries, selectedCountry })
+    renderMap({ targetSVG, onSelection, countries, markers, selectedCountry })
   }
 
-  handleSelection = (selectedArea) => {
-    const { onLoadCountry } = this.props
-
-    if (onLoadCountry && selectedArea) {
-      onLoadCountry(selectedArea.properties.contextReference)
-    }
-  }
+  handleSelection = (selectedArea) => {}
 
   render() {
     return (
-      <svg className="MapDisplay" id="map-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight}>
+      <svg className="GlobeDisplay" id="globe-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight}>
         <g id="map-display-zoom">
           <g id="map-display-countries" />
           <g id="map-display-states" />
@@ -71,4 +64,4 @@ class MapDisplay extends Component {
   }
 }
 
-export default MapDisplay
+export default GlobeDisplay
