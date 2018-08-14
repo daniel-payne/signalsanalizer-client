@@ -25,16 +25,23 @@ class GlobeDisplay extends Component {
   state = {}
 
   componentDidMount() {
-    buildMap(this.mapTarget.current)
+    const targetSVG = this.mapTarget.current
+    const height = this.props.displayHeight
+    const width = this.props.displayWidth
+
+    buildMap({ targetSVG, height, width })
   }
 
   componentDidUpdate() {
-    const { countries, markers, selectedCountry } = this.props
+    const { countries, markers, selectedCountry, displayHeight, displayWidth } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
 
-    renderMap({ targetSVG, onSelection, countries, markers, selectedCountry })
+    const height = displayHeight - 120
+    const width = displayWidth
+
+    renderMap({ targetSVG, height, width, onSelection, countries, markers, selectedCountry })
   }
 
   handleSelection = (selectedArea) => {}
@@ -42,23 +49,9 @@ class GlobeDisplay extends Component {
   render() {
     return (
       <svg className="GlobeDisplay" id="globe-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight}>
-        <g id="map-display-zoom">
-          <g id="map-display-countries" />
-          <g id="map-display-states" />
-          <g id="map-display-counties" />
-          <g id="map-display-conurbations" />
-          <g id="map-display-places" />
-          <g id="map-display-features" />
-          <g id="map-display-markers" />
-          <g id="map-display-events" />
-
-          <g id="map-display-selected-country" />
-          <g id="map-display-selected-state" />
-          <g id="map-display-selected-county" />
-          <g id="map-display-selected-conurbation" />
-          <g id="map-display-selected-markers" />
-          <g id="map-display-selected-events" />
-        </g>
+        <path id="map-display-globe" />
+        <path id="map-display-graticule" />
+        <g id="map-display-countries" />
       </svg>
     )
   }
