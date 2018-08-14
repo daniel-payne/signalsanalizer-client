@@ -58,7 +58,11 @@ function getCountry(contextReference, useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`country:${contextReference}`, JSON.stringify(data))
+        try {
+          window.localStorage.setItem(`country:${contextReference}`, JSON.stringify(data))
+        } catch (error) {
+          console.log('COuNTRY STORAGE FULL :' + contextReference)
+        }
       }
       console.log('LOADED COUNTRY ------------------------ FROM SERVER ' + data.length)
       return data

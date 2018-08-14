@@ -61,7 +61,16 @@ const RenderView = (props) => {
         />
       )
     case 'GLOBE':
-      return <GlobeDisplay className="map-display" countries={countries} markers={markers} displayWidth={containerWidth} displayHeight={containerHeight} />
+      return (
+        <GlobeDisplay
+          className="map-display"
+          countries={countries}
+          markers={markers}
+          selectedCountry={selectedCountry}
+          displayWidth={containerWidth}
+          displayHeight={containerHeight}
+        />
+      )
     case 'MAP':
       return <MapDisplay className="map-display" countries={countries} markers={markers} displayWidth={containerWidth} displayHeight={containerHeight} />
     default:

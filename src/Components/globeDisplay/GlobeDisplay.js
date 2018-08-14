@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
+import { observer, inject } from 'mobx-react'
 
-import renderMap, { buildMap } from './GlobeDisplay.d3'
+import renderMap from './GlobeDisplay.d3'
 
 import './GlobeDisplay.css'
 
@@ -19,17 +21,15 @@ class GlobeDisplay extends Component {
     markers: PropTypes.array,
     selectedCountry: PropTypes.object,
 
-    onLoadCountry: PropTypes.func,
+    onChooseCountry: PropTypes.func,
   }
 
   state = {}
 
-  componentDidMount() {
-    const targetSVG = this.mapTarget.current
-    const height = this.props.displayHeight
-    const width = this.props.displayWidth
+  handleSelection = (contextReference) => {
+    const newRoute = this.props.store.calculateRoute({ place: contextReference })
 
-    buildMap({ targetSVG, height, width })
+    this.props.history.push('/' + newRoute)
   }
 
   componentDidUpdate() {
@@ -44,17 +44,17 @@ class GlobeDisplay extends Component {
     renderMap({ targetSVG, height, width, onSelection, countries, markers, selectedCountry })
   }
 
-  handleSelection = (selectedArea) => {}
-
   render() {
     return (
       <svg className="GlobeDisplay" id="globe-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight}>
         <path id="map-display-globe" />
         <path id="map-display-graticule" />
         <g id="map-display-countries" />
+        <path id="map-selected-country" />
       </svg>
     )
   }
 }
 
-export default GlobeDisplay
+export default inject('store')(withRouter(GlobeDisplay))
+//export default inject('store')(observer(withRouter(GlobeDisplay)))

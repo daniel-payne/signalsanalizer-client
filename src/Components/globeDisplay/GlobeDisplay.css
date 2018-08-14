@@ -3,6 +3,13 @@
   pointer-events: none;
 }
 
+.land--selected {
+  fill: gainsboro;
+  stroke: DarkSeaGreen;
+  stroke-width: 1px;
+  /* pointer-events: none; */
+}
+
 .land {
   fill: gainsboro;
   /* pointer-events: none; */
