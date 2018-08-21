@@ -11,6 +11,8 @@ const Country = types
 
     countryName: types.string,
 
+    centerpointCoordinates: types.maybe(types.array(types.number)),
+
     outline: types.maybe(types.string),
     border: types.maybe(types.string),
 

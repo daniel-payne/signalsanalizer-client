@@ -180,6 +180,68 @@ const renderMap = ({ targetSVG, height, width, onSelection, countries, states, s
     .translate([width / 2, height / 2])
     .clipAngle(90)
 
+  if (selectedCountry) {
+    if (selectedCountry.centerpointCoordinates) {
+      //projection.rotate([-1 * selectedCountry.centerpointCoordinates[0], -1 * selectedCountry.centerpointCoordinates[1]])
+      //const points = [selectedCountry.centerpointCoordinates.toJSON()]
+      // svg
+      //   .selectAll('circle')
+      //   .data(points)
+      //   .enter()
+      //   .append('circle')
+      //   .attr('cx', function(d) {
+      //     return projection(d)[0]
+      //   })
+      //   .attr('cy', function(d) {
+      //     return projection(d)[1]
+      //   })
+      //   .attr('r', '8px')
+      //   .attr('fill', 'red')
+    }
+
+    if (selectedCountry.outline) {
+      const bounds = d3.geoBounds(JSON.parse(selectedCountry.outline))
+
+      const dx = bounds[1][0] - bounds[0][0]
+      const dy = bounds[1][1] - bounds[0][1]
+      const x = (bounds[0][0] + bounds[1][0]) / 2
+      const y = (bounds[0][1] + bounds[1][1]) / 2
+      const scale = Math.max(dx, dy)
+      //const translate = [width / 2 - scale * x, height / 2 - scale * y]
+      console.log(['SCALE', projection.scale(), scale])
+      //projection.translate(translate[0], translate[1])
+      projection.scale((projection.scale() * 90) / Math.max(dx, dy))
+
+      projection.rotate([-1 * x, -1 * y])
+
+      // const points = [[x, y]]
+
+      // svg
+      //   .selectAll('circle')
+      //   .data(points)
+      //   .enter()
+      //   .append('circle')
+      //   .attr('cx', function(d) {
+      //     return projection(d)[0]
+      //   })
+      //   .attr('cy', function(d) {
+      //     return projection(d)[1]
+      //   })
+      //   .attr('r', '8px')
+      //   .attr('fill', 'red')
+    }
+  } else if (selectedState) {
+    if (selectedState.centerpointCoordinates) {
+      projection.rotate([-1 * selectedState.centerpointCoordinates[0], -1 * selectedState.centerpointCoordinates[1]])
+    }
+
+    // if (selectedState.outline) {
+    //   const fitGeoJSON = JSON.parse(selectedState.outline)
+
+    //   projection.fitSize([width, height], fitGeoJSON)
+    // }
+  }
+
   const path = d3.geoPath().projection(projection)
 
   drawGlobe(svg, path)

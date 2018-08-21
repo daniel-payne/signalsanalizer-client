@@ -26,6 +26,10 @@ function getCountries(useCache = true) {
       return data.map((country) => {
         const geoJson = country.outlineWKT ? wkt.parse(country.outlineWKT) : {}
 
+        const centerpoint = country.centerpointWKT ? wkt.parse(country.centerpointWKT) : {}
+
+        const centerpointCoordinates = centerpoint ? centerpoint.coordinates : undefined
+
         let geoJSONDateline = geoJson
 
         if (country.countryName === 'Russia' || country.countryName === 'Fiji') {
@@ -37,6 +41,8 @@ function getCountries(useCache = true) {
         return {
           countryName: country.countryName,
           contextReference: country.contextReference,
+
+          centerpointCoordinates,
 
           outline: JSON.stringify({
             type: 'Feature',
