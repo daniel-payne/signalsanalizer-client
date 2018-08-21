@@ -18,6 +18,7 @@ class GlobeDisplay extends Component {
     displayWidth: PropTypes.number,
     displayHeight: PropTypes.number,
     countries: PropTypes.array,
+    states: PropTypes.array,
     markers: PropTypes.array,
     selectedCountry: PropTypes.object,
 
@@ -32,8 +33,8 @@ class GlobeDisplay extends Component {
     this.props.history.push('/' + newRoute)
   }
 
-  componentDidUpdate() {
-    const { countries, markers, selectedCountry, displayHeight, displayWidth } = this.props
+  componentDidMount() {
+    const { countries, markers, states, selectedCountry, displayHeight, displayWidth } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
@@ -41,20 +42,33 @@ class GlobeDisplay extends Component {
     const height = displayHeight - 120
     const width = displayWidth
 
-    renderMap({ targetSVG, height, width, onSelection, countries, markers, selectedCountry })
+    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry })
+  }
+
+  componentDidUpdate() {
+    const { countries, markers, states, selectedCountry, displayHeight, displayWidth } = this.props
+
+    const targetSVG = this.mapTarget.current
+    const onSelection = this.handleSelection
+
+    const height = displayHeight - 120
+    const width = displayWidth
+
+    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry })
   }
 
   render() {
     return (
       <svg className="GlobeDisplay" id="globe-display" ref={this.mapTarget} width={this.props.displayWidth} height={this.props.displayHeight}>
-        <path id="map-display-globe" />
-        <path id="map-display-graticule" />
+        <g id="map-display-globe" />
+        <g id="map-display-graticule" />
         <g id="map-display-countries" />
-        <path id="map-selected-country" />
+        <g id="map-selected-country" />
+        <g id="map-display-states" />
       </svg>
     )
   }
 }
 
-export default inject('store')(withRouter(GlobeDisplay))
+export default inject('store')(observer(withRouter(GlobeDisplay)))
 //export default inject('store')(observer(withRouter(GlobeDisplay)))

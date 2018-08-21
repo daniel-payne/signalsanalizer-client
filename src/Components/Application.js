@@ -43,9 +43,7 @@ const RenderView = (props) => {
   const { globe, displayReference } = store
   const { countries, markers, selectedCountry } = globe || {}
   const { states, selectedState } = selectedCountry || {}
-  // eslint-disable-next-line no-unused-vars
   const { counties, selectedCounty } = selectedState || {}
-  // eslint-disable-next-line no-unused-vars
   const { conurbations, selectedConurbation } = selectedState || {}
 
   switch (displayReference) {
@@ -66,9 +64,18 @@ const RenderView = (props) => {
           className="map-display"
           countries={countries}
           markers={markers}
+          states={states}
           selectedCountry={selectedCountry}
+          selectedState={selectedState}
+          selectedCounty={selectedCounty}
+          selectedConurbation={selectedConurbation}
           displayWidth={containerWidth}
           displayHeight={containerHeight}
+          //Hack to ensure all is drawn correctly
+          countriesCount={countries ? countries.length : 0}
+          statesCount={states ? states.length : 0}
+          countiesCount={counties ? counties.length : 0}
+          conurbationsCount={conurbations ? conurbations.length : 0}
         />
       )
     case 'MAP':
@@ -102,13 +109,6 @@ class Application extends Component {
   }
 
   render() {
-    // let total //eslint-disable-line no-unused-vars
-    // //Hack to ensure all is drawn correctly
-    // total += this.props.store.displayedCountries ? this.props.store.displayedCountries.length : 0
-    // total += this.props.store.displayedStates ? this.props.store.displayedStates.length : 0
-    // total += this.props.store.displayedCounties ? this.props.store.displayedCounties.length : 0
-    // total += this.props.store.displayedConurbations ? this.props.store.displayedConurbations.length : 0
-
     const { globe } = this.props.store
     // eslint-disable-next-line no-unused-vars
     const { countries, selectedCountry } = globe || {}
@@ -126,13 +126,18 @@ class Application extends Component {
             <CssBaseline />
 
             <Header
-              // title={this.props.containerHeight}
+              // title={selectedCountry ? selectedCountry.states.length : 'x'}
               selectedCountry={selectedCountry}
               selectedState={selectedState}
               selectedCounty={selectedCounty}
               selectedConurbation={selectedConurbation}
               onOpenLeftDrawer={this.toggleDrawer('left', true)}
               onOpenRightDrawer={this.toggleDrawer('right', true)}
+              //Hack to ensure all is drawn correctly
+              countriesCount={countries ? countries.length : 0}
+              statesCount={states ? states.length : 0}
+              countiesCount={counties ? counties.length : 0}
+              conurbationsCount={conurbations ? conurbations.length : 0}
             />
 
             <Switch>

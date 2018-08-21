@@ -15,6 +15,13 @@
   /* pointer-events: none; */
 }
 
+.state {
+  fill: gainsboro;
+  stroke: DarkSeaGreen;
+  stroke-width: 1px;
+  /* pointer-events: none; */
+}
+
 .guide {
   stroke: #3299bb;
   pointer-events: none;

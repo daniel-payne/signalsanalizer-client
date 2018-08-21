@@ -24,7 +24,7 @@ function getCountries(useCache = true) {
     })
     .then((data) => {
       return data.map((country) => {
-        const geoJson = wkt.parse(country.outlineWKT)
+        const geoJson = country.outlineWKT ? wkt.parse(country.outlineWKT) : {}
 
         let geoJSONDateline = geoJson
 
@@ -50,7 +50,11 @@ function getCountries(useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`countries`, JSON.stringify(data))
+        try {
+          window.localStorage.setItem(`countries`, JSON.stringify(data))
+        } catch (error) {
+          console.log('COuNTRIES STORAGE FULL :')
+        }
       }
       console.log('LOADED COUNTRIES ------------------------ FROM SERVER ' + data.length)
       return data
