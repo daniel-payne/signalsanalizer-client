@@ -34,7 +34,7 @@ class GlobeDisplay extends Component {
   }
 
   componentDidMount() {
-    const { countries, markers, states, selectedCountry, displayHeight, displayWidth } = this.props
+    const { countries, markers, states, selectedCountry, selectedState, displayHeight, displayWidth } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
@@ -42,11 +42,11 @@ class GlobeDisplay extends Component {
     const height = displayHeight - 120
     const width = displayWidth
 
-    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry })
+    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry, selectedState })
   }
 
   componentDidUpdate() {
-    const { countries, markers, states, selectedCountry, displayHeight, displayWidth } = this.props
+    const { countries, markers, states, selectedCountry, selectedState, displayHeight, displayWidth } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
@@ -54,7 +54,7 @@ class GlobeDisplay extends Component {
     const height = displayHeight - 120
     const width = displayWidth
 
-    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry })
+    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry, selectedState })
   }
 
   render() {

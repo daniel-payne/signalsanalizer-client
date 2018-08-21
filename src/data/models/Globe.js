@@ -94,10 +94,6 @@ const Globe = types
 
         self.selectedCountry = newCountry
       }
-
-      self.selectedCountry.states.forEach((state) => {
-        state.loadConurbations()
-      })
     }),
     deSelect: function deSelect() {
       if (self.selectedCountry) {
