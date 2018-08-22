@@ -34,7 +34,7 @@ function getConurbations(contextReference, useCache = true) {
           conurbationName: conurbation.conurbationName,
           contextReference: conurbation.contextReference,
 
-          border: JSON.stringify({
+          outline: JSON.stringify({
             type: 'Feature',
             geometry: {
               type: geoJsonRewound.type,
@@ -46,7 +46,11 @@ function getConurbations(contextReference, useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`conurbations:${contextReference}`, JSON.stringify(data))
+        try {
+          window.localStorage.setItem(`conurbations:${contextReference}`, JSON.stringify(data))
+        } catch (error) {
+          console.log('CONURBATIONS STORAGE FULL :' + contextReference)
+        }
       }
       console.log('LOADED CONURBATIONS ------------------------ FROM SERVER ' + data.length)
       return data

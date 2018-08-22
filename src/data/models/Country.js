@@ -22,6 +22,17 @@ const Country = types
 
     isStatesLoaded: types.optional(types.boolean, false),
   })
+  .views((self) => ({
+    get conurbations() {
+      const conurbations = []
+
+      self.states.forEach((state) => {
+        conurbations.push(...state.conurbations)
+      })
+
+      return conurbations
+    },
+  }))
   .actions((self) => ({
     loadStates: flow(function* loadStates() {
       if (self.isStatesLoaded === true) {

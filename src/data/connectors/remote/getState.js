@@ -58,7 +58,11 @@ function getState(contextReference, useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`state:${contextReference}`, JSON.stringify(data))
+        try {
+          window.localStorage.setItem(`state:${contextReference}`, JSON.stringify(data))
+        } catch (error) {
+          console.log('STATE STORAGE FULL :' + contextReference)
+        }
       }
       console.log('LOADED STATE ------------------------ FROM SERVER ' + data.length)
       return data

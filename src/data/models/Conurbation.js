@@ -5,6 +5,7 @@ const Conurbation = types.model({
 
   conurbationName: types.string,
 
+  outline: types.maybe(types.string),
   border: types.maybe(types.string),
 })
 

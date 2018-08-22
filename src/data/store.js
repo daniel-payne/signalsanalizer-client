@@ -132,6 +132,10 @@ const Store = types
       if (contextCountry) {
         yield self.globe.chooseCountry(contextCountry).then(() => {
           self.globe.selectedCountry.loadStates().then(() => {
+            self.globe.selectedCountry.states.forEach((state) => {
+              state.loadConurbations()
+            })
+
             if (contextState) {
               self.globe.selectedCountry.chooseState(contextState).then(() => {
                 self.globe.selectedCountry.selectedState.loadCounties().then(() => {

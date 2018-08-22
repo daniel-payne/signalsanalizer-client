@@ -34,19 +34,27 @@ class GlobeDisplay extends Component {
   }
 
   componentDidMount() {
-    const { countries, markers, states, selectedCountry, selectedState, displayHeight, displayWidth } = this.props
-
-    const targetSVG = this.mapTarget.current
-    const onSelection = this.handleSelection
-
-    const height = displayHeight - 120
-    const width = displayWidth
-
-    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry, selectedState })
+    this.renderD3Map()
   }
 
   componentDidUpdate() {
-    const { countries, markers, states, selectedCountry, selectedState, displayHeight, displayWidth } = this.props
+    this.renderD3Map()
+  }
+
+  renderD3Map() {
+    const {
+      countries,
+      states,
+      counties,
+      conurbations,
+      markers,
+      selectedCountry,
+      selectedState,
+      selectedCounty,
+      selectedconurbation,
+      displayHeight,
+      displayWidth,
+    } = this.props
 
     const targetSVG = this.mapTarget.current
     const onSelection = this.handleSelection
@@ -54,7 +62,21 @@ class GlobeDisplay extends Component {
     const height = displayHeight - 120
     const width = displayWidth
 
-    renderMap({ targetSVG, height, width, onSelection, countries, markers, states, selectedCountry, selectedState })
+    renderMap({
+      targetSVG,
+      height,
+      width,
+      onSelection,
+      countries,
+      markers,
+      states,
+      counties,
+      conurbations,
+      selectedCountry,
+      selectedState,
+      selectedCounty,
+      selectedconurbation,
+    })
   }
 
   render() {
@@ -63,8 +85,9 @@ class GlobeDisplay extends Component {
         <g id="map-display-globe" />
         <g id="map-display-graticule" />
         <g id="map-display-countries" />
-        <g id="map-selected-country" />
         <g id="map-display-states" />
+        <g id="map-display-counties" />
+        <g id="map-display-conurbations" />
       </svg>
     )
   }

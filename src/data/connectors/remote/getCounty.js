@@ -46,7 +46,11 @@ function getCounties(contextReference, useCache = true) {
     })
     .then((data) => {
       if (useCache === true && window.localStorage && data) {
-        window.localStorage.setItem(`counties:${contextReference}`, JSON.stringify(data))
+        try {
+          window.localStorage.setItem(`counties:${contextReference}`, JSON.stringify(data))
+        } catch (error) {
+          console.log('COuNTY STORAGE FULL :' + contextReference)
+        }
       }
       console.log('LOADED COUNTY ------------------------ FROM SERVER ' + data.length)
       return data

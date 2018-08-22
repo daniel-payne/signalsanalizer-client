@@ -42,7 +42,7 @@ const drawCountries = (svg, path, countries, selectedCountry, onSelection) => {
     .select('#map-display-countries')
     .selectAll('path')
     .on('mouseover', function(d) {
-      if (selectedCountry && selectedCountry.contextReference !== d.properties.contextReference) {
+      if (!selectedCountry || selectedCountry.contextReference !== d.properties.contextReference) {
         d3.select(this).style('fill', 'DarkSeaGreen')
       }
     })
@@ -122,9 +122,9 @@ const drawStates = (svg, path, states, selectedState, onSelection) => {
     .select('#map-display-states')
     .selectAll('path')
     .on('mouseover', function(d) {
-      //if (selectedState.contextReference !== d.properties.contextReference) {
-      d3.select(this).style('fill', 'DarkSeaGreen')
-      //}
+      if (!selectedState || selectedState.contextReference !== d.properties.contextReference) {
+        d3.select(this).style('fill', 'DarkSeaGreen')
+      }
     })
     .on('mouseout', function(d) {
       d3.select(this).style('fill', 'gainsboro')
@@ -139,6 +139,129 @@ const drawStates = (svg, path, states, selectedState, onSelection) => {
   if (selectedState) {
     svg
       .select('#map-display-states')
+      .selectAll('path')
+      .attr('opacity', 0.25)
+  }
+}
+
+const drawCounties = (svg, path, counties, selectedCounty, onSelection) => {
+  if (!counties) {
+    return
+  }
+  console.log('counties===============' + counties.length)
+  const data = counties
+    .filter((county) => county.outline)
+
+    .map((county) => {
+      const geoJson = JSON.parse(county.outline)
+
+      geoJson.properties = {
+        name: county.countyName,
+        contextReference: county.contextReference,
+        type: 'COUNTY',
+      }
+
+      return geoJson
+    })
+
+  const selection = svg
+    .select('#map-display-counties')
+    .selectAll('path')
+    .data(data, (d) => d.properties.contextReference)
+
+  selection
+    .enter()
+    .append('path')
+    //.attr('class', 'state')
+    .attr('fill', 'gainsboro')
+    .attr('stroke', 'DarkSeaGreen')
+    .attr('stroke-width', '1px')
+    .attr('d', path)
+
+  selection.exit().remove()
+
+  svg
+    .select('#map-display-counties')
+    .selectAll('path')
+    .on('mouseover', function(d) {
+      if (!selectedCounty || selectedCounty.contextReference !== d.properties.contextReference) {
+        d3.select(this).style('fill', 'DarkSeaGreen')
+      }
+    })
+    .on('mouseout', function(d) {
+      d3.select(this).style('fill', 'gainsboro')
+    })
+    .on('dblclick', function(d) {
+      d3.event.stopPropagation()
+      if (onSelection) {
+        onSelection(d.properties.contextReference)
+      }
+    })
+
+  if (selectedCounty) {
+    svg
+      .select('#map-display-counties')
+      .selectAll('path')
+      .attr('opacity', 0.75)
+  }
+}
+
+const drawConurbations = (svg, path, conurbations, selectedConurbation, onSelection) => {
+  if (!conurbations) {
+    return
+  }
+
+  const data = conurbations
+    .filter((conurbation) => conurbation.outline)
+
+    .map((conurbation) => {
+      const geoJson = JSON.parse(conurbation.outline)
+      debugger
+      geoJson.properties = {
+        name: conurbation.conurbationName,
+        contextReference: conurbation.contextReference,
+        type: 'STATE',
+      }
+
+      return geoJson
+    })
+
+  const selection = svg
+    .select('#map-display-conurbations')
+    .selectAll('path')
+    .data(data, (d) => d.properties.contextReference)
+
+  selection
+    .enter()
+    .append('path')
+    .attr('class', 'conurbation')
+    .attr('fill', 'Peru')
+    .attr('stroke-width', '0px')
+    .attr('d', path)
+
+  selection.exit().remove()
+
+  svg
+    .select('#map-display-conurbations')
+    .selectAll('path')
+    .on('mouseover', function(d) {
+      if (!selectedConurbation || selectedConurbation.contextReference !== d.properties.contextReference) {
+        d3.select(this).style('fill', 'DarkSeaGreen')
+      }
+    })
+    .on('mouseout', function(d) {
+      d3.select(this).style('fill', 'Peru')
+    })
+    .on('dblclick', function(d) {
+      d3.event.stopPropagation()
+      if (onSelection) {
+        onSelection(d.properties.contextReference)
+      }
+    })
+
+  if (selectedConurbation) {
+    svg
+      .select('#map-display-conurbations')
       .selectAll('path')
       .attr('opacity', 0.25)
   }
@@ -172,7 +295,20 @@ const redrawPaths = (svg, path) => () => {
   svg.selectAll('path').attr('d', path)
 }
 
-const renderMap = ({ targetSVG, height, width, onSelection, countries, states, selectedCountry, selectedState }) => {
+const renderMap = ({
+  targetSVG,
+  height,
+  width,
+  onSelection,
+  countries,
+  states,
+  counties,
+  conurbations,
+  selectedCountry,
+  selectedState,
+  selectedCounty,
+  selectedConurbation,
+}) => {
   const svg = d3.select(targetSVG)
 
   svg.selectAll('path').remove()
@@ -219,6 +355,8 @@ const renderMap = ({ targetSVG, height, width, onSelection, countries, states, s
   drawGraticule(svg, path)
   drawCountries(svg, path, countries, selectedCountry, onSelection)
   drawStates(svg, path, states, selectedState, onSelection)
+  drawCounties(svg, path, counties, selectedCounty, onSelection)
+  drawConurbations(svg, path, conurbations, selectedConurbation, onSelection)
 
   d3GeoZoom()
     .projection(projection)

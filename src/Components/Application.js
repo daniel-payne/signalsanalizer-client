@@ -42,9 +42,9 @@ const RenderView = (props) => {
   const { store, containerWidth, containerHeight } = props
   const { globe, displayReference } = store
   const { countries, markers, selectedCountry } = globe || {}
-  const { states, selectedState } = selectedCountry || {}
+  const { states, conurbations, selectedState } = selectedCountry || {}
   const { counties, selectedCounty } = selectedState || {}
-  const { conurbations, selectedConurbation } = selectedState || {}
+  const { selectedConurbation } = selectedState || {}
 
   switch (displayReference) {
     case 'DATA':
@@ -65,6 +65,8 @@ const RenderView = (props) => {
           countries={countries}
           markers={markers}
           states={states}
+          counties={counties}
+          conurbations={conurbations}
           selectedCountry={selectedCountry}
           selectedState={selectedState}
           selectedCounty={selectedCounty}
@@ -110,14 +112,9 @@ class Application extends Component {
 
   render() {
     const { globe } = this.props.store
-    // eslint-disable-next-line no-unused-vars
     const { countries, selectedCountry } = globe || {}
-    // eslint-disable-next-line no-unused-vars
-    const { states, selectedState } = selectedCountry || {}
-    // eslint-disable-next-line no-unused-vars
-    const { counties, selectedCounty } = selectedState || {}
-    // eslint-disable-next-line no-unused-vars
-    const { conurbations, selectedConurbation } = selectedState || {}
+    const { states, conurbations, selectedState } = selectedCountry || {}
+    const { counties, selectedCounty, selectedConurbation } = selectedState || {}
 
     return (
       <div className="Application">
@@ -126,7 +123,7 @@ class Application extends Component {
             <CssBaseline />
 
             <Header
-              // title={selectedCountry ? selectedCountry.states.length : 'x'}
+              // title={counties ? counties.length : 'x'}
               selectedCountry={selectedCountry}
               selectedState={selectedState}
               selectedCounty={selectedCounty}
